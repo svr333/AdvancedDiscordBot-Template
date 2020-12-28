@@ -7,7 +7,11 @@
             "type": "process",
             "args": [
                 "build",
+<<<<<<< HEAD
                 "${workspaceFolder}/GLRDiscordBot-Dashboard/AdvancedDiscordBot-Template/src/AdvancedBot.Dashboard/AdvancedBot.Dashboard.csproj",
+=======
+                "${workspaceFolder}/src/AdvancedBot.Core/AdvancedBot.Core.csproj",
+>>>>>>> f00b185afd3b1a5f6a694d68894e5d41769a0e1f
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +23,11 @@
             "type": "process",
             "args": [
                 "publish",
+<<<<<<< HEAD
                 "${workspaceFolder}/GLRDiscordBot-Dashboard/AdvancedDiscordBot-Template/src/AdvancedBot.Dashboard/AdvancedBot.Dashboard.csproj",
+=======
+                "${workspaceFolder}/src/AdvancedBot.Core/AdvancedBot.Core.csproj",
+>>>>>>> f00b185afd3b1a5f6a694d68894e5d41769a0e1f
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +40,11 @@
             "args": [
                 "watch",
                 "run",
+<<<<<<< HEAD
                 "${workspaceFolder}/GLRDiscordBot-Dashboard/AdvancedDiscordBot-Template/src/AdvancedBot.Dashboard/AdvancedBot.Dashboard.csproj",
+=======
+                "${workspaceFolder}/src/AdvancedBot.Core/AdvancedBot.Core.csproj",
+>>>>>>> f00b185afd3b1a5f6a694d68894e5d41769a0e1f
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

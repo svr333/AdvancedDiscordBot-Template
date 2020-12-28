@@ -5,11 +5,16 @@
    "version": "0.2.0",
    "configurations": [
         {
+<<<<<<< HEAD
             "name": ".NET Core Launch (web)",
+=======
+            "name": ".NET Core Launch (console)",
+>>>>>>> f00b185afd3b1a5f6a694d68894e5d41769a0e1f
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
+<<<<<<< HEAD
             "program": "${workspaceFolder}/GLRDiscordBot-Dashboard/AdvancedDiscordBot-Template/src/AdvancedBot.Dashboard/bin/Debug/netcoreapp3.1/AdvancedBot.Dashboard.dll",
             "args": [],
             "cwd": "${workspaceFolder}/GLRDiscordBot-Dashboard/AdvancedDiscordBot-Template/src/AdvancedBot.Dashboard",
@@ -25,6 +30,14 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }*/
+=======
+            "program": "${workspaceFolder}/src/AdvancedBot.Core/bin/Debug/netcoreapp3.1/AdvancedBot.Core.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/AdvancedBot.Core",
+            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+            "console": "internalConsole",
+            "stopAtEntry": false
+>>>>>>> f00b185afd3b1a5f6a694d68894e5d41769a0e1f
         },
         {
             "name": ".NET Core Attach",
