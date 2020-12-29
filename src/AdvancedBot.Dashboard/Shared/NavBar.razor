@@ -1,0 +1,69 @@
+<header class="mdc-top-app-bar">
+  <MatAppBarContainer>
+    <MatAppBar Fixed="true">
+      <MatAppBarRow>
+        <MatAppBarSection>
+          <MatTooltip Tooltip="AppHoverNavToggle">
+            <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
+          </MatTooltip>
+          <MatTooltip Tooltip="AppHoverNavMinimize">
+            <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+          </MatTooltip>
+          <MatAppBarTitle>MatBlazor NavBar</MatAppBarTitle>
+        </MatAppBarSection>
+        <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+          <MatIconButton Icon="favorite"></MatIconButton>
+          <MatIconButton Icon="print"></MatIconButton>
+          <MatIconButton Icon="get_app"></MatIconButton>
+        </MatAppBarSection>
+      </MatAppBarRow>
+      
+    </MatAppBar>
+  </MatAppBarContainer>
+</header>
+
+@code {
+    bool _navMenuOpened = true;
+    bool _navMinified = false;
+    public string bbDrawerClass = string.Empty;
+
+    void NavToggle()
+    {
+        _navMenuOpened = !_navMenuOpened;
+
+        if (_navMenuOpened)
+        {
+            bbDrawerClass = "full";
+        }
+        else
+        {
+            bbDrawerClass = "closed";
+        }
+
+        StateHasChanged();
+    }
+
+    void NavMinify()
+    {
+        _navMinified = !_navMinified;
+
+        if (!_navMenuOpened)
+        {
+            _navMinified = true;
+        }
+
+        if (_navMinified)
+        {
+            bbDrawerClass = "mini";
+            _navMenuOpened = true;
+        }
+        else if (_navMenuOpened)
+        {
+            bbDrawerClass = "full";
+        }
+
+        _navMenuOpened = true;
+
+        StateHasChanged();
+    }
+}

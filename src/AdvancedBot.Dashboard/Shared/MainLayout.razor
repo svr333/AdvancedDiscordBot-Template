@@ -1,15 +1,139 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components
+@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<MatThemeProvider Theme="@darktheme">
+  <MatDrawerContainer Class="@bbDrawerClass">
+    <MatDrawer @bind-Opened="@_navMenuOpened">
+      <!-- Header -->
+      <div class="mdc-drawer__header">
+        <div class="mdc-drawer__profile-picture">
+          <figure>
+            <img src="../assets/placeholders/placeholder-portrait.png" width="48" height="48" aria-hidden="true">
+          </figure>
+        </div>
+        <div class="drawer__user-credentials">
+          <h3 class="mdc-drawer__title">Username</h3>
+          <h6 class="mdc-drawer__subtitle">#0001</h6>
+        </div>
+      </div>
+      <NavMenu />
+    </MatDrawer>
+    <MatDrawerContent>
+      <!-- Navbar -->
+      <header class="mdc-top-app-bar">
+        <MatAppBarContainer>
+          <MatAppBar Fixed="true">
+            <MatAppBarRow>
+              <MatAppBarSection>
+                <MatTooltip Tooltip="Toggle Drawer">
+                  <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())"
+                    RefBack="@context"></MatIconButton>
+                </MatTooltip>
+                <MatTooltip Tooltip="Minimize Drawer">
+                  <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase"
+                    OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                </MatTooltip>
+                <MatAppBarTitle>GLR Discord Bot</MatAppBarTitle>
+              </MatAppBarSection>
+              <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                <MatTooltip Tooltip="Settings" Wrap="true">
+                  <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
+                </MatTooltip>
+                <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef" CanBeClosed="false">
+                  <MatList>
+                    <div class="navlist-header">
+                      <MatH6>Settings</MatH6>
+                      <MatBody2>Here you have quick access for page display settings.</MatBody2>
+                    </div>
+                    <MatDivider></MatDivider>
+                    <div class="settings-list">
+                      <!-- Same thing but doesn't close menu on click: <MatRipple><li class="setting-option"><MatIcon>brightness_4</MatIcon>Theme: Dark <MatSlideToggle TValue="bool"></MatSlideToggle></li></MatRipple>-->
+                      <MatListItem><MatIcon>brightness_4</MatIcon>Theme: Dark<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
+                      <MatListItem><MatIcon>view_comfy</MatIcon>Density: Normal<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
+                      <MatListItem><MatIcon>settings_overscan</MatIcon>Expandable NavRail<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
+                      <MatListItem><MatIcon>align_horizontal_left</MatIcon>Direction: LTR<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
+                      <MatListItem><MatIcon>language</MatIcon>Language<MatIcon style="margin-inline-start: auto;">navigate_next</MatIcon></MatListItem>
+                      <MatDivider></MatDivider>
+                      <MatListItem><MatIcon>logout</MatIcon>Log out</MatListItem>
+                    </div>
+                  </MatList>
+                </MatMenu>
+              </MatAppBarSection>
+            </MatAppBarRow>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-    </div>
+          </MatAppBar>
+        </MatAppBarContainer>
+      </header>
+    </MatDrawerContent>
+  </MatDrawerContainer>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+  <main class="app-main-content">
+    @Body
+  </main>
+</MatThemeProvider>
+
+@code {
+  MatTheme darktheme = new MatTheme()
+    {
+  Background = "#121212",
+  Primary = MatThemeColors.DeepPurple._200.Value,
+  Secondary = "#FFD740",
+  Surface = "#121212",
+  OnPrimary = "#000",
+  OnSecondary = "#000",
+  OnSurface = "#FFF"
+    };
+
+  bool _navMenuOpened = true;
+  bool _navMinified = true;
+  public string bbDrawerClass = string.Empty;
+
+  void NavToggle()
+  {
+    _navMenuOpened = !_navMenuOpened;
+
+    if (_navMenuOpened)
+    {
+      bbDrawerClass = "full";
+    }
+    else
+    {
+      bbDrawerClass = "closed";
+    }
+
+    StateHasChanged();
+  }
+
+  void NavMinify()
+  {
+    _navMinified = !_navMinified;
+
+    if (!_navMenuOpened)
+    {
+      _navMinified = true;
+    }
+
+    if (_navMinified)
+    {
+      bbDrawerClass = "mini";
+      _navMenuOpened = true;
+    }
+    else if (_navMenuOpened)
+    {
+      bbDrawerClass = "full";
+    }
+
+    _navMenuOpened = true;
+
+    StateHasChanged();
+  }
+
+  ForwardRef buttonForwardRef = new ForwardRef();
+  BaseMatMenu Menu;
+
+  public void OnClick(MouseEventArgs e)
+  {
+    this.Menu.OpenAsync();
+  }
+}

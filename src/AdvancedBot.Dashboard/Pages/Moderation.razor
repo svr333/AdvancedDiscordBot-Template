@@ -1,0 +1,304 @@
+@page "/moderation"
+
+<Title>Moderation | GLR Discord Bot</Title>
+
+<section class="intro-container">
+  <MatH2>Moderation</MatH2>
+  <MatBody1 class="page-description">Everything you need to moderate the server can be found here.</MatBody1>
+</section>
+
+<section class="users-watchlist-sec">
+  <MatH3>Watchlist</MatH3>
+  <MatBody1 class="mdc-high-emphasis">Keep track of all users who have some kind of penalty on their account(s).</MatBody1>
+  <MatTabGroup>
+    <MatTab Label="Warned">
+      <MatTable Items="@warnedusers" Striped="true" class="mat-elevation-z5" id="warned-users__table">
+        <MatTableHeader>
+          <th><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+          <th>Avatar</th>
+          <th>Name</th>
+          <th>Warning(s)</th>
+          <th>Reasson(s)</th>
+          <th>Actions</th>
+        </MatTableHeader>
+        <MatTableRow>
+          <td><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+          <td><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's avatar" title="@context.Name's avatar"></td>
+          <td>@context.Name</td>
+          <td>@context.Warnings</td>
+          <td>@context.Reassons</td>
+          <td>
+            <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
+            <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+              <MatList>
+                <MatListItem>Give warn</MatListItem>
+                <MatListItem>Remove warn</MatListItem>
+                <MatListItem>Mute</MatListItem>
+                <MatListItem>Kick</MatListItem>
+                <MatListItem>Ban</MatListItem>
+              </MatList>
+            </MatMenu>
+          </td>
+        </MatTableRow>
+      </MatTable>
+    </MatTab>
+    <MatTab Label="Muted">
+      <MatTable Items="@mutedusers" Striped="true" class="mat-elevation-z5" id="muted-users__table">
+        <MatTableHeader>
+          <th><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+          <th>Avatar</th>
+          <th>Name</th>
+          <th>Mute start</th>
+          <th>Mute end</th>
+          <th>Mute duration</th>
+          <th>Reasson(s)</th>
+          <th>Actions</th>
+        </MatTableHeader>
+        <MatTableRow>
+          <td><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+          <td><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's avatar" title="@context.Name's avatar"></td>
+          <td>@context.Name</td>
+          <td>@context.MuteStart</td>
+          <td>@context.MuteEnd</td>
+          <td>@context.MuteDuration</td>
+          <td>@context.Reassons</td>
+          <td>
+            <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
+            <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+              <MatList>
+                <MatListItem>Modify duration</MatListItem>
+                <MatListItem>Unmute</MatListItem>
+                <MatListItem>Kick</MatListItem>
+                <MatListItem>Ban</MatListItem>
+              </MatList>
+            </MatMenu>
+          </td>
+        </MatTableRow>
+      </MatTable>
+    </MatTab>
+    <MatTab Label="Banned">
+      <MatTable Items="@bannedusers" Striped="true" class="mat-elevation-z5" id="banned-users__table">
+        <MatTableHeader>
+          <th><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+          <th>Avatar</th>
+          <th>Name</th>
+          <th>Ban start</th>
+          <th>Ban end</th>
+          <th>Ban duration</th>
+          <th>Reasson(s)</th>
+          <th>Actions</th>
+        </MatTableHeader>
+        <MatTableRow>
+          <td><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+          <td><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's avatar" title="@context.Name's avatar"></td>
+          <td>@context.Name</td>
+          <td>@context.BanStart</td>
+          <td>@context.BanEnd</td>
+          <td>@context.BanDuration</td>
+          <td>@context.Reassons</td>
+          <td>
+            <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
+            <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+              <MatList>
+                <MatListItem>Modify duration</MatListItem>
+                <MatListItem>Unban</MatListItem>
+              </MatList>
+            </MatMenu>
+          </td>
+        </MatTableRow>
+      </MatTable>
+    </MatTab>
+  </MatTabGroup>
+</section>
+
+<section class="role-rewards-sec">
+  <MatH3>Commands</MatH3>
+  <MatBody2 class="mdc-high-emphasis">Quick access to moderation-related commands and their configurations.</MatBody2>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!warn</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Give a warning to someone and store it on this page.
+                  </MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!mute</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Mute someone on the server.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!kick</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Kick someone from the server.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!ban</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Ban someone from the server.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+    </div>
+  </div>
+</section>
+
+@code
+{
+  bool checked1 = true;
+  bool checked2 = false;
+  bool? intermediate = null;
+
+  public class WarnedUser
+ {
+    public string Avatar { get; set; }
+    public string Name { get; set; }
+    public int Warnings { get; set; }
+    public string Reassons { get; set; }
+
+    public WarnedUser(string avatar, string name, int warnings, string reassons)
+    {
+      Avatar = avatar;
+      Name = name;
+      Warnings = warnings;
+      Reassons = reassons;
+    }
+  }
+
+  WarnedUser[] warnedusers = new[]
+  {
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 1, "Flood"),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 2, "Flood, spam"),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 3, "Flood, spam, swearing"),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 999, "Thinking doing this would be really easy."),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 1, "Celeste's soundtrack is great to listen when creating webpages ngl."),
+  };
+
+  public class MutedUser
+ {
+    public string Avatar { get; set; }
+    public string Name { get; set; }
+    public string MuteStart { get; set; }
+    public string MuteEnd { get; set; }
+    public string MuteDuration { get; set; }
+    public string Reassons { get; set; }
+
+    public MutedUser(string avatar, string name, string mutestart, string muteend, string muteduration, string reassons)
+    {
+      Avatar = avatar;
+      Name = name;
+      MuteStart = mutestart;
+      MuteEnd = muteend;
+      MuteDuration = muteduration;
+      Reassons = reassons;
+    }
+  }
+
+  MutedUser[] mutedusers = new[]
+  {
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+  };
+
+  public class BannedUser
+ {
+    public string Avatar { get; set; }
+    public string Name { get; set; }
+    public string BanStart { get; set; }
+    public string BanEnd { get; set; }
+    public string BanDuration { get; set; }
+    public string Reassons { get; set; }
+
+    public BannedUser(string avatar, string name, string banstart, string banend, string banduration, string reassons)
+    {
+      Avatar = avatar;
+      Name = name;
+      BanStart = banstart;
+      BanEnd = banend;
+      BanDuration = banduration;
+      Reassons = reassons;
+    }
+  }
+
+  BannedUser[] bannedusers = new[]
+  {
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+  };
+
+  ForwardRef buttonForwardRef = new ForwardRef();
+  BaseMatMenu Menu;
+
+  public void OnClick(MouseEventArgs e)
+  {
+    this.Menu.OpenAsync();
+  }
+}

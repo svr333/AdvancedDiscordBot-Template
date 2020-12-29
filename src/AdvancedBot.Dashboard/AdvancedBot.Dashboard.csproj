@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MatBlazor" Version="2.8.0" />
+    <PackageReference Include="Toolbelt.Blazor.HeadElement" Version="5.0.0" />
+  </ItemGroup>
+
 </Project>
