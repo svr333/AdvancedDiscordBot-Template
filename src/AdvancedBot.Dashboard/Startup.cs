@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AdvancedBot.Dashboard.Data;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
+using System.IO;
+using System;
+using System.Collections.Generic;
 
 namespace AdvancedBot.Dashboard
 {
@@ -23,9 +27,25 @@ namespace AdvancedBot.Dashboard
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddHeadElementHelper();
             services.AddSingleton<System.Net.Http.HttpClient>();
+            services.AddResponseCompression();
+            services.AddResponseCompression(options =>
+            {
+                IEnumerable<string> MimeTypes = new[] { "text/plain", "text/html", "text/css", "font/woff2", "font/woff", "font/ttf", "application/javascript", "image/x-icon", "image/png" };
+                
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+
+                options.Providers.Add<CustomCompressionProvider>();
+                options.MimeTypes = MimeTypes;
+                options.EnableForHttps = true;
+
+                services.Configure<BrotliCompressionProviderOptions>(options => 
+                {
+                    options.Level = CompressionLevel.Optimal;
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +62,7 @@ namespace AdvancedBot.Dashboard
                 app.UseHsts();
             }
 
+            app.UseResponseCompression();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -53,5 +74,11 @@ namespace AdvancedBot.Dashboard
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
+    }
+    public class CustomCompressionProvider : ICompressionProvider
+    {
+        public string EncodingName => "br";
+        public bool SupportsFlush => true; 
+        public Stream CreateStream(Stream outputStream) => new BrotliStream(outputStream, CompressionMode.Compress);
     }
 }

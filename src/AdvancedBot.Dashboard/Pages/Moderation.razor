@@ -3,8 +3,22 @@
 <Title>Moderation | GLR Discord Bot</Title>
 
 <section class="intro-container">
-  <MatH2>Moderation</MatH2>
+  <MatH2 class="page-header">Moderation</MatH2>
   <MatBody1 class="page-description">Everything you need to moderate the server can be found here.</MatBody1>
+</section>
+
+<section class="moderator-roles-sec">
+  <MatH3>Moderator roles</MatH3>
+  <MatBody1>Users with one of these roles are considered your server moderators and are not affected by Auto-Moderator, they are also immune to moderator commands.</MatBody1>
+  <div class="roles-list-container">
+    <MatChipSet @ref="chipset" @bind-SelectedChip="selectedChip">
+      <MatIconButton class="mr-2" Icon="add" @onclick="OnAddOption" Id="AddRoleButton"></MatIconButton>
+      @foreach (var option in labels)
+      {
+      <MatChip class="mt-1" Label=@option LeadingIcon="clear" TrailingIconClick="OnTrailingIconClick" Id="RoleChip"></MatChip>
+      }
+    </MatChipSet>
+  </div>
 </section>
 
 <section class="users-watchlist-sec">
@@ -14,28 +28,38 @@
     <MatTab Label="Warned">
       <MatTable Items="@warnedusers" Striped="true" class="mat-elevation-z5" id="warned-users__table">
         <MatTableHeader>
-          <th><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
-          <th>Avatar</th>
-          <th>Name</th>
-          <th>Warning(s)</th>
-          <th>Reasson(s)</th>
-          <th>Actions</th>
+          <th class="user-list__header--checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+          <th class="user-list__header--pfp">Avatar</th>
+          <th class="user-list__header--name">Name</th>
+          <th class="user-list__header--warns">Warning(s)</th>
+          <th class="user-list__header--reassons">Reasson(s)</th>
+          <th class="user-list__header--actions">Actions</th>
         </MatTableHeader>
         <MatTableRow>
-          <td><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
-          <td><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's avatar" title="@context.Name's avatar"></td>
-          <td>@context.Name</td>
-          <td>@context.Warnings</td>
-          <td>@context.Reassons</td>
-          <td>
+          <td class="user-list__checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+          <td class="user-list__pfp"><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's profile picture" title="@context.Name's profile picture"></td>
+          <td class="user-list__name">
+            <MatTooltip Tooltip="@context.Id" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__id">
+              <ChildContent Context="another_name">@context.Name</ChildContent>
+            </MatTooltip>
+            @*
+            <MatTooltip Tooltip="Copy user's ID" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__copy-id-tooltip">
+              <ChildContent Context="another_name"><MatIconButton Icon="content_copy" id="user-list__copy-id-button"></MatIconButton></ChildContent>
+            </MatTooltip>
+            *@
+          </td>
+          <td class="user-list__warns">@context.Warnings</td>
+          <td class="user-list__reassons">@context.Reassons</td>
+          <td class="user-list__actions">
             <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
             <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
               <MatList>
-                <MatListItem>Give warn</MatListItem>
-                <MatListItem>Remove warn</MatListItem>
-                <MatListItem>Mute</MatListItem>
-                <MatListItem>Kick</MatListItem>
-                <MatListItem>Ban</MatListItem>
+                <MatListItem OnClick="@OpenWarnModifyDialog">Modify duration</MatListItem>
+                <MatListItem OnClick="@OpenWarnDialog">Give warn</MatListItem>
+                <MatListItem OnClick="UnwarnSnack">Remove last warn</MatListItem>
+                <MatListItem OnClick="@OpenMuteDialog">Mute</MatListItem>
+                <MatListItem OnClick="@OpenKickDialog">Kick</MatListItem>
+                <MatListItem OnClick="@OpenBanDialog">Ban</MatListItem>
               </MatList>
             </MatMenu>
           </td>
@@ -45,31 +69,40 @@
     <MatTab Label="Muted">
       <MatTable Items="@mutedusers" Striped="true" class="mat-elevation-z5" id="muted-users__table">
         <MatTableHeader>
-          <th><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
-          <th>Avatar</th>
-          <th>Name</th>
-          <th>Mute start</th>
-          <th>Mute end</th>
-          <th>Mute duration</th>
-          <th>Reasson(s)</th>
-          <th>Actions</th>
+          <th class="user-list__header--checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+          <th class="user-list__header--pfp">Avatar</th>
+          <th class="user-list__header--name">Name</th>
+          <th class="user-list__header--mute-start">Mute start</th>
+          <th class="user-list__header--mute-end">Mute end</th>
+          <th class="user-list__header--mute-duration">Mute duration</th>
+          <th class="user-list__header--reassons">Reasson(s)</th>
+          <th class="user-list__header--actions">Actions</th>
         </MatTableHeader>
         <MatTableRow>
-          <td><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
-          <td><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's avatar" title="@context.Name's avatar"></td>
-          <td>@context.Name</td>
-          <td>@context.MuteStart</td>
-          <td>@context.MuteEnd</td>
-          <td>@context.MuteDuration</td>
-          <td>@context.Reassons</td>
-          <td>
+          <td class="user-list__checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+          <td class="user-list__pfp"><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's profile picture" title="@context.Name's profile picture"></td>
+          <td class="user-list__name">
+            <MatTooltip Tooltip="@context.Id" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__id">
+              <ChildContent Context="another_name">@context.Name</ChildContent>
+            </MatTooltip>
+            @*
+            <MatTooltip Tooltip="Copy user's ID" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__copy-id-tooltip">
+              <ChildContent Context="another_name"><MatIconButton Icon="content_copy" id="user-list__copy-id-button"></MatIconButton></ChildContent>
+            </MatTooltip>
+            *@
+          </td>
+          <td class="user-list__time" id="mute-start">@context.MuteStart</td>
+          <td class="user-list__time" id="mute-end">@context.MuteEnd</td>
+          <td class="user-list__time" id="mute-duration">@context.MuteDuration</td>
+          <td class="user-list__reassons">@context.Reassons</td>
+          <td class="user-list__actions">
             <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
             <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
               <MatList>
                 <MatListItem>Modify duration</MatListItem>
                 <MatListItem>Unmute</MatListItem>
-                <MatListItem>Kick</MatListItem>
-                <MatListItem>Ban</MatListItem>
+                <MatListItem OnClick="@OpenKickDialog">Kick</MatListItem>
+                <MatListItem OnClick="@OpenBanDialog">Ban</MatListItem>
               </MatList>
             </MatMenu>
           </td>
@@ -79,24 +112,33 @@
     <MatTab Label="Banned">
       <MatTable Items="@bannedusers" Striped="true" class="mat-elevation-z5" id="banned-users__table">
         <MatTableHeader>
-          <th><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
-          <th>Avatar</th>
-          <th>Name</th>
-          <th>Ban start</th>
-          <th>Ban end</th>
-          <th>Ban duration</th>
-          <th>Reasson(s)</th>
-          <th>Actions</th>
+          <th class="user-list__header--checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+          <th class="user-list__header--pfp">Avatar</th>
+          <th class="user-list__header--name">Name</th>
+          <th class="user-list__header--ban-start">Ban start</th>
+          <th class="user-list__header--ban-end">Ban end</th>
+          <th class="user-list__header--ban-durtion">Ban duration</th>
+          <th class="user-list__header--reassons">Reasson(s)</th>
+          <th class="user-list__header--actions">Actions</th>
         </MatTableHeader>
         <MatTableRow>
-          <td><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
-          <td><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's avatar" title="@context.Name's avatar"></td>
-          <td>@context.Name</td>
-          <td>@context.BanStart</td>
-          <td>@context.BanEnd</td>
-          <td>@context.BanDuration</td>
-          <td>@context.Reassons</td>
-          <td>
+          <td class="user-list__checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+          <td class="user-list__pfp"><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's profile picture" title="@context.Name's profile picture"></td>
+          <td class="user-list__name">
+            <MatTooltip Tooltip="@context.Id" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__id">
+              <ChildContent Context="another_name">@context.Name</ChildContent>
+            </MatTooltip>
+            @*
+            <MatTooltip Tooltip="Copy user's ID" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__copy-id-tooltip">
+              <ChildContent Context="another_name"><MatIconButton Icon="content_copy" id="user-list__copy-id-button"></MatIconButton></ChildContent>
+            </MatTooltip>
+            *@
+          </td>
+          <td class="user-list__time" id="ban-start">@context.BanStart</td>
+          <td class="user-list__time" id="ban-end">@context.BanEnd</td>
+          <td class="user-list__time" id="ban-duration">@context.BanDuration</td>
+          <td class="user-list__reassons">@context.Reassons</td>
+          <td class="user-list__actions">
             <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
             <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
               <MatList>
@@ -111,7 +153,111 @@
   </MatTabGroup>
 </section>
 
-<section class="role-rewards-sec">
+<section class="audit-log-sec">
+  <MatH3>Audit log</MatH3>
+  <MatBody2 class="mdc-high-emphasis">Automatically register events on the server into a specific channel.</MatBody2>
+  <MatSelect Label="Channel name" TValue="string" FullWidth="true">
+    <MatOptionString>None (disabled)</MatOptionString>
+    <MatOptionString>#chat-english</MatOptionString>
+    <MatOptionString>#chat-español</MatOptionString>
+    <MatOptionString>#porn-chat</MatOptionString>
+    <MatOptionString>#logs</MatOptionString>
+  </MatSelect>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>Moderation events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@mutedcheck">Muted user</MatCheckbox>
+          <MatCheckbox @bind-Value="@unmutedcheck">Unmuted user</MatCheckbox>
+          <MatCheckbox @bind-Value="@modbancheck">Moderation ban</MatCheckbox>
+          <MatCheckbox @bind-Value="@modunbancheck">Moderation unban</MatCheckbox>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>Messaging events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@msgeditcheck">Message edited</MatCheckbox>
+          <MatCheckbox @bind-Value="@msgdeletecheck">Message deleted</MatCheckbox>
+          <MatCheckbox @bind-Value="@invitecheck">Invite posted</MatCheckbox>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>User events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@nickcheck">Nickname changed</MatCheckbox>
+          <MatCheckbox @bind-Value="@bancheck">User banned</MatCheckbox>
+          <MatCheckbox @bind-Value="@unbancheck">User unbanned</MatCheckbox>
+          <MatCheckbox @bind-Value="@newusercheck">New user</MatCheckbox>
+          <MatCheckbox @bind-Value="@userleavecheck">User left</MatCheckbox>
+          <MatCheckbox @bind-Value="@userupdatecheck">User updated</MatCheckbox>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>Role events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@rolecreatedcheck">Role created</MatCheckbox>
+          <MatCheckbox @bind-Value="@roleupdatedcheck">Role updated</MatCheckbox>
+          <MatCheckbox @bind-Value="@roledeletedcheck">Role deleted</MatCheckbox>
+          <MatCheckbox @bind-Value="@rolechangescheck">User roles changes</MatCheckbox>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>Voice events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@vcjoincheck">Member joined voice channel</MatCheckbox>
+          <MatCheckbox @bind-Value="@vcleftcheck">Member left voice channel</MatCheckbox>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>Server events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@sveditedcheck">Server edited</MatCheckbox>
+          <MatCheckbox @bind-Value="@emojiupdatedcheck">Emojis updated</MatCheckbox>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <MatListGroupSubHeader>Channel events</MatListGroupSubHeader>
+          <MatCheckbox @bind-Value="@channelcreatedcheck">Channel created</MatCheckbox>
+          <MatCheckbox @bind-Value="@channelupdatedcheck">Channel updated</MatCheckbox>
+          <MatCheckbox @bind-Value="@channeldeletedcheck">Channel deleted</MatCheckbox>
+        </MatPaper>
+      </div>
+    </div>
+  </div>
+  <MatDivider class="section-divider-18"></MatDivider>
+  <MatH4 class="section-header">Ignored channels</MatH4>
+  <MatBody2>Messages updated and deleted in these channels will be ignored. This is useful if you have super-duper private channels that you don't want your moderators to know about.</MatBody2>
+  <div class="channels-list-container">
+    <ul class="channels-list">
+      <li class="channel">
+        <svg width="24" height="24" class="jbvrpb-10 hGpXtv" viewBox="0 0 24 24">
+          <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M5.88657 21C5.57547 21 5.3399 20.7189 5.39427 20.4126L6.00001 17H2.59511C2.28449 17 2.04905 16.7198 2.10259 16.4138L2.27759 15.4138C2.31946 15.1746 2.52722 15 2.77011 15H6.35001L7.41001 9H4.00511C3.69449 9 3.45905 8.71977 3.51259 8.41381L3.68759 7.41381C3.72946 7.17456 3.93722 7 4.18011 7H7.76001L8.39677 3.41262C8.43914 3.17391 8.64664 3 8.88907 3H9.87344C10.1845 3 10.4201 3.28107 10.3657 3.58738L9.76001 7H15.76L16.3968 3.41262C16.4391 3.17391 16.6466 3 16.8891 3H17.8734C18.1845 3 18.4201 3.28107 18.3657 3.58738L17.76 7H21.1649C21.4755 7 21.711 7.28023 21.6574 7.58619L21.4824 8.58619C21.4406 8.82544 21.2328 9 20.9899 9H17.41L16.35 15H19.7549C20.0655 15 20.301 15.2802 20.2474 15.5862L20.0724 16.5862C20.0306 16.8254 19.8228 17 19.5799 17H16L15.3632 20.5874C15.3209 20.8261 15.1134 21 14.8709 21H13.8866C13.5755 21 13.3399 20.7189 13.3943 20.4126L14 17H8.00001L7.36325 20.5874C7.32088 20.8261 7.11337 21 6.87094 21H5.88657ZM9.41045 9L8.35045 15H14.3504L15.4104 9H9.41045Z"></path>
+        </svg>
+        <span class="channel-name">play-the-game</span>
+        <button class="close-button"><i class="material-icons">close</i></button>
+      </li>
+      <li class="channel">
+        <svg width="24" height="24" class="jbvrpb-10 hGpXtv" viewBox="0 0 24 24">
+          <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M5.88657 21C5.57547 21 5.3399 20.7189 5.39427 20.4126L6.00001 17H2.59511C2.28449 17 2.04905 16.7198 2.10259 16.4138L2.27759 15.4138C2.31946 15.1746 2.52722 15 2.77011 15H6.35001L7.41001 9H4.00511C3.69449 9 3.45905 8.71977 3.51259 8.41381L3.68759 7.41381C3.72946 7.17456 3.93722 7 4.18011 7H7.76001L8.39677 3.41262C8.43914 3.17391 8.64664 3 8.88907 3H9.87344C10.1845 3 10.4201 3.28107 10.3657 3.58738L9.76001 7H15.76L16.3968 3.41262C16.4391 3.17391 16.6466 3 16.8891 3H17.8734C18.1845 3 18.4201 3.28107 18.3657 3.58738L17.76 7H21.1649C21.4755 7 21.711 7.28023 21.6574 7.58619L21.4824 8.58619C21.4406 8.82544 21.2328 9 20.9899 9H17.41L16.35 15H19.7549C20.0655 15 20.301 15.2802 20.2474 15.5862L20.0724 16.5862C20.0306 16.8254 19.8228 17 19.5799 17H16L15.3632 20.5874C15.3209 20.8261 15.1134 21 14.8709 21H13.8866C13.5755 21 13.3399 20.7189 13.3943 20.4126L14 17H8.00001L7.36325 20.5874C7.32088 20.8261 7.11337 21 6.87094 21H5.88657ZM9.41045 9L8.35045 15H14.3504L15.4104 9H9.41045Z"></path>
+        </svg>
+        <span class="channel-name">play-the-game</span>
+        <button class="close-button"><i class="material-icons">close</i></button>
+      </li>
+      <li class="add-channel-button">
+        <MatIconButton class="mr-3" Icon="add" Id="AddRoleButton"></MatIconButton>
+      </li>
+    </ul>
+  </div>
+  <MatDivider class="section-divider-18"></MatDivider>
+  <div class="ignore-bots-toggle__container">
+    <MatBody1>Do not log actions made by other bots</MatBody1>
+    <MatSlideToggle TValue="bool"></MatSlideToggle>
+  </div>
+</section>
+
+<section class="commands-sec">
   <MatH3>Commands</MatH3>
   <MatBody2 class="mdc-high-emphasis">Quick access to moderation-related commands and their configurations.</MatBody2>
   <div class="mat-layout-grid">
@@ -181,22 +327,179 @@
   </div>
 </section>
 
+@*
+* Dialogs -- from here to the end of the html, there's a lot of repeated code
+    (but for differen stuff. Such as a dialog for warns, other for kicks, other
+    for bans, etc.). This probably could be improved by making a component of
+    each element and simply importing it here. But I'm not sure tho.
+*@
+<MatDialog @bind-IsOpen="@warnModifyDialogIsOpen">
+  <MatDialogTitle>Change warn duration</MatDialogTitle>
+  <MatDialogContent>
+    <p>Select the new duration of the latest warn.</p>
+    <MatDatePicker @bind-Value="FeaturesDateTime" Label="Duration" Required="true" Format="MM/dd/yy H:mm:ss"></MatDatePicker>
+  </MatDialogContent>
+  <MatDialogActions>
+    <MatButton OnClick="@(e => { warnModifyDialogIsOpen = false; })" class="cancel-button">Cancel</MatButton>
+    <MatButton OnClick="@WarnModifyUser">Update warn</MatButton>
+  </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@warnDialogIsOpen">
+  <MatDialogTitle>Warn user?</MatDialogTitle>
+  <MatDialogContent>
+    <p>Select duration and reasson for the warn.</p>
+    <MatDatePicker @bind-Value="FeaturesDateTime" Label="Duration" Required="true" Format="MM/dd/yy H:mm:ss"></MatDatePicker>
+    <MatTextField @bind-Value="@dialogWarnReasson" Label="Reasson" Required="true" Placeholder="E.g.: Flood, spam..."></MatTextField>
+  </MatDialogContent>
+  <MatDialogActions>
+    <MatButton OnClick="@(e => { warnDialogIsOpen = false; })" class="cancel-button">Cancel</MatButton>
+    <MatButton OnClick="@WarnUser">Warn</MatButton>
+  </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@muteDialogIsOpen">
+  <MatDialogTitle>Mute user?</MatDialogTitle>
+  <MatDialogContent>
+    <p>Select duration and reasson for the mute.</p>
+    <MatDatePicker @bind-Value="FeaturesDateTime" Label="Duration" Required="true" Format="MM/dd/yy H:mm:ss"></MatDatePicker>
+    <MatTextField @bind-Value="@dialogMuteReasson" Label="Reasson" Required="true" Placeholder="E.g.: Flood, spam..."></MatTextField>
+  </MatDialogContent>
+  <MatDialogActions>
+    <MatButton OnClick="@(e => { muteDialogIsOpen = false; })" class="cancel-button">Cancel</MatButton>
+    <MatButton OnClick="@MuteUser">Mute</MatButton>
+  </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@kickDialogIsOpen">
+  <MatDialogTitle>Kick user?</MatDialogTitle>
+  <MatDialogContent>
+    <p>Type the reasson for the kick.</p>
+    <MatTextField @bind-Value="@dialogKickReasson" Label="Reasson" Required="true" Placeholder="E.g.: Flood, spam..."></MatTextField>
+  </MatDialogContent>
+  <MatDialogActions>
+    <MatButton OnClick="@(e => { kickDialogIsOpen = false; })" class="cancel-button">Cancel</MatButton>
+    <MatButton OnClick="@KickUser">Kick</MatButton>
+  </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@banDialogIsOpen">
+  <MatDialogTitle>Ban user?</MatDialogTitle>
+  <MatDialogContent>
+    <p>Select duration and reasson for the ban.</p>
+    <MatDatePicker @bind-Value="FeaturesDateTime" Label="Duration" Required="true" Format="MM/dd/yy H:mm:ss"></MatDatePicker>
+    <MatTextField @bind-Value="@dialogBanReasson" Label="Reasson" Required="true" Placeholder="E.g.: Flood, spam..."></MatTextField>
+  </MatDialogContent>
+  <MatDialogActions>
+    <MatButton OnClick="@(e => { banDialogIsOpen = false; })" class="cancel-button">Cancel</MatButton>
+    <MatButton OnClick="@BanUser">Ban</MatButton>
+  </MatDialogActions>
+</MatDialog>
+
+@* Snackbars *@
+<MatSnackbar @bind-IsOpen="@warnModifySnackBarIsOpen" Leading="true" Timeout="5000">
+  <MatSnackbarContent>User's warn duration has been updated.</MatSnackbarContent>
+  <MatSnackbarActions>
+    <MatButton OnClick="WarnModifySnackClose">Undo</MatButton>
+  </MatSnackbarActions>
+</MatSnackbar>
+
+<MatSnackbar @bind-IsOpen="@warnSnackBarIsOpen" Leading="true" Timeout="5000">
+  <MatSnackbarContent>The user has been warned.</MatSnackbarContent>
+  <MatSnackbarActions>
+    <MatButton OnClick="WarnSnackClose">Undo</MatButton>
+  </MatSnackbarActions>
+</MatSnackbar>
+
+<MatSnackbar @bind-IsOpen="@unwarnSnackBarIsOpen" Leading="true" Timeout="5000">
+  <MatSnackbarContent>Removed latest warning.</MatSnackbarContent>
+  <MatSnackbarActions>
+    <MatButton OnClick="UnwarnSnackClose">Undo</MatButton>
+  </MatSnackbarActions>
+</MatSnackbar>
+
+<MatSnackbar @bind-IsOpen="@muteSnackBarIsOpen" Leading="true" Timeout="5000">
+  <MatSnackbarContent>The user has been muted.</MatSnackbarContent>
+  <MatSnackbarActions>
+    <MatButton OnClick="MuteSnackClose">Undo</MatButton>
+  </MatSnackbarActions>
+</MatSnackbar>
+
+<MatSnackbar @bind-IsOpen="@kickSnackBarIsOpen" Leading="true" Timeout="5000">
+  <MatSnackbarContent>The user has been kicked from the server.</MatSnackbarContent>
+</MatSnackbar>
+
+<MatSnackbar @bind-IsOpen="@banSnackBarIsOpen" Leading="true" Timeout="5000">
+  <MatSnackbarContent>The user has been banned from the server.</MatSnackbarContent>
+  <MatSnackbarActions>
+    <MatButton OnClick="BanSnackClose">Undo</MatButton>
+  </MatSnackbarActions>
+</MatSnackbar>
+
 @code
 {
+  @* TODO: Copy to clipboard button *@
+
+  @* Mod roles chips *@
+  MatChip selectedChip = null;
+  @*MatChip[] selectedChips = null;*@
+
+  MatChipSet chipset = null;
+  int counter = 1;
+  List<string> labels = new List<string>();
+
+  private void OnAddOption()
+  {
+    labels.Add($"Chip {counter++}");
+  }
+
+  private void OnTrailingIconClick(MatChip chip)
+  {
+    labels.Remove(chip.Label);
+    chipset?.UnregisterChip(chip); // <-- to avoid memleak
+  }
+
+  @* Tables *@
   bool checked1 = true;
   bool checked2 = false;
   bool? intermediate = null;
+  bool mutedcheck = false;
+  bool unmutedcheck = false;
+  bool modbancheck = false;
+  bool modunbancheck = false;
+  bool msgeditcheck = false;
+  bool msgdeletecheck = false;
+  bool invitecheck = false;
+  bool nickcheck = false;
+  bool bancheck = false;
+  bool unbancheck = false;
+  bool newusercheck = false;
+  bool userleavecheck = false;
+  bool userupdatecheck = false;
+  bool rolecreatedcheck = false;
+  bool roleupdatedcheck = false;
+  bool roledeletedcheck = false;
+  bool rolechangescheck = false;
+  bool vcjoincheck = false;
+  bool vcleftcheck = false;
+  bool sveditedcheck = false;
+  bool emojiupdatedcheck = false;
+  bool channelcreatedcheck = false;
+  bool channelupdatedcheck = false;
+  bool channeldeletedcheck = false;
 
   public class WarnedUser
- {
+  {
     public string Avatar { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; }
     public int Warnings { get; set; }
     public string Reassons { get; set; }
 
-    public WarnedUser(string avatar, string name, int warnings, string reassons)
+    public WarnedUser(string avatar, string id, string name, int warnings, string reassons)
     {
       Avatar = avatar;
+      Id = id;
       Name = name;
       Warnings = warnings;
       Reassons = reassons;
@@ -205,33 +508,35 @@
 
   WarnedUser[] warnedusers = new[]
   {
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 1, "Flood"),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 2, "Flood, spam"),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 3, "Flood, spam, swearing"),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 999, "Thinking doing this would be really easy."),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 0, ""),
-    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", 1, "Celeste's soundtrack is great to listen when creating webpages ngl."),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 1, "Flood"),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 2, "Flood, spam"),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 3, "Flood, spam, swearing"),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 999, "Thinking doing this would be really easy."),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 0, ""),
+    new WarnedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 1, "Celeste's soundtrack is great to listen when creating webpages ngl."),
   };
 
   public class MutedUser
- {
+  {
     public string Avatar { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; }
     public string MuteStart { get; set; }
     public string MuteEnd { get; set; }
     public string MuteDuration { get; set; }
     public string Reassons { get; set; }
 
-    public MutedUser(string avatar, string name, string mutestart, string muteend, string muteduration, string reassons)
+    public MutedUser(string avatar, string id, string name, string mutestart, string muteend, string muteduration, string reassons)
     {
       Avatar = avatar;
+      Id = id;
       Name = name;
       MuteStart = mutestart;
       MuteEnd = muteend;
@@ -242,33 +547,35 @@
 
   MutedUser[] mutedusers = new[]
   {
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new MutedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
   };
 
   public class BannedUser
- {
+  {
     public string Avatar { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; }
     public string BanStart { get; set; }
     public string BanEnd { get; set; }
     public string BanDuration { get; set; }
     public string Reassons { get; set; }
 
-    public BannedUser(string avatar, string name, string banstart, string banend, string banduration, string reassons)
+    public BannedUser(string avatar, string id, string name, string banstart, string banend, string banduration, string reassons)
     {
       Avatar = avatar;
+      Id = id;
       Name = name;
       BanStart = banstart;
       BanEnd = banend;
@@ -279,19 +586,19 @@
 
   BannedUser[] bannedusers = new[]
   {
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
-    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/ce2a2651f8e777eab66f3e9ae256066f.png?size=32", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
+    new BannedUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", "30.12.2020 21:00.00", "31.12.2020 23:30.45", "1 day, 30 minutes, 45 seconds", ""),
   };
 
   ForwardRef buttonForwardRef = new ForwardRef();
@@ -301,4 +608,156 @@
   {
     this.Menu.OpenAsync();
   }
+
+  @** Actions **@
+  bool warnModifyDialogIsOpen = false;
+  bool warnDialogIsOpen = false;
+  bool muteDialogIsOpen = false;
+  bool kickDialogIsOpen = false;
+  bool banDialogIsOpen = false;
+  string dialogWarnReasson = null;
+  string dialogMuteReasson = null;
+  string dialogKickReasson = null;
+  string dialogBanReasson = null;
+
+  void OpenWarnModifyDialog()
+  {
+    warnModifyDialogIsOpen = true;
+  }
+
+  void OpenWarnDialog()
+  {
+    warnDialogIsOpen = true;
+  }
+
+  void OpenMuteDialog()
+  {
+    muteDialogIsOpen = true;
+  }
+
+  void OpenKickDialog()
+  {
+    kickDialogIsOpen = true;
+  }
+
+  void OpenBanDialog()
+  {
+    banDialogIsOpen = true;
+  }
+
+  void WarnModifyUser()
+  {
+    warnModifyDialogIsOpen = false;
+    warnModifySnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void WarnUser()
+  {
+    warnDialogIsOpen = false;
+    warnSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void MuteUser()
+  {
+    muteDialogIsOpen = false;
+    muteSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void KickUser()
+  {
+    kickDialogIsOpen = false;
+    kickSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void BanUser()
+  {
+    banDialogIsOpen = false;
+    banSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  bool warnModifySnackBarIsOpen = false;
+  bool warnSnackBarIsOpen = false;
+  bool unwarnSnackBarIsOpen = false;
+  bool muteSnackBarIsOpen = false;
+  bool kickSnackBarIsOpen = false;
+  bool banSnackBarIsOpen = false;
+
+  void WarnModifySnack()
+  {
+    warnModifySnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void WarnModifySnackClose()
+  {
+    warnModifySnackBarIsOpen = false;
+    this.StateHasChanged();
+  }
+
+  void WarnSnack()
+  {
+    warnSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void WarnSnackClose()
+  {
+    warnSnackBarIsOpen = false;
+    this.StateHasChanged();
+  }
+
+  void UnwarnSnack()
+  {
+    unwarnSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void UnwarnSnackClose()
+  {
+    unwarnSnackBarIsOpen = false;
+    this.StateHasChanged();
+  }
+
+  void MuteSnack()
+  {
+    unwarnSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void MuteSnackClose()
+  {
+    unwarnSnackBarIsOpen = false;
+    this.StateHasChanged();
+  }
+
+  void KickSnack()
+  {
+    kickSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void KickSnackClose()
+  {
+    kickSnackBarIsOpen = false;
+    this.StateHasChanged();
+  }
+
+  void BanSnack()
+  {
+    banSnackBarIsOpen = true;
+    this.StateHasChanged();
+  }
+
+  void BanSnackClose()
+  {
+    banSnackBarIsOpen = false;
+    this.StateHasChanged();
+  }
+
+  DateTime? FeaturesDateTime = DateTime.Now;
 }

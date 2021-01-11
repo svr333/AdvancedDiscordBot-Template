@@ -3,17 +3,17 @@
 @inject NavigationManager navigationManager
 
 <MatThemeProvider Theme="@darktheme">
-  <MatDrawerContainer Class="@bbDrawerClass">
+  <MatDrawerContainer Class="@bbDrawerClass" data-hover-expand="@bbDrawerHoverExpand">
     <MatDrawer @bind-Opened="@_navMenuOpened">
       <!-- Header -->
       <div class="mdc-drawer__header">
         <div class="mdc-drawer__profile-picture">
           <figure>
-            <img src="../assets/placeholders/placeholder-portrait.png" width="48" height="48" aria-hidden="true">
+            <img src="https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=64" width="48" height="48" aria-hidden="true">
           </figure>
         </div>
         <div class="drawer__user-credentials">
-          <h3 class="mdc-drawer__title">Username</h3>
+          <h5 class="mdc-drawer__title">Username</h5>
           <h6 class="mdc-drawer__subtitle">#0001</h6>
         </div>
       </div>
@@ -27,20 +27,19 @@
             <MatAppBarRow>
               <MatAppBarSection>
                 <MatTooltip Tooltip="Toggle Drawer">
-                  <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())"
-                    RefBack="@context"></MatIconButton>
+                  <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
                 </MatTooltip>
                 <MatTooltip Tooltip="Minimize Drawer">
-                  <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase"
-                    OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                  <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
                 </MatTooltip>
                 <MatAppBarTitle>GLR Discord Bot</MatAppBarTitle>
               </MatAppBarSection>
+              
               <MatAppBarSection Align="@MatAppBarSectionAlign.End">
                 <MatTooltip Tooltip="Settings" Wrap="true">
                   <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
                 </MatTooltip>
-                <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef" CanBeClosed="false">
+                <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef" CanBeClosed="false" style="background-color: #1e1e1e;">
                   <MatList>
                     <div class="navlist-header">
                       <MatH6>Settings</MatH6>
@@ -49,17 +48,22 @@
                     <MatDivider></MatDivider>
                     <div class="settings-list">
                       <!-- Same thing but doesn't close menu on click: <MatRipple><li class="setting-option"><MatIcon>brightness_4</MatIcon>Theme: Dark <MatSlideToggle TValue="bool"></MatSlideToggle></li></MatRipple>-->
+                      @*
                       <MatListItem><MatIcon>brightness_4</MatIcon>Theme: Dark<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
                       <MatListItem><MatIcon>view_comfy</MatIcon>Density: Normal<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
-                      <MatListItem><MatIcon>settings_overscan</MatIcon>Expandable NavRail<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
+                      *@
+                      <MatListItem><MatIcon>settings_overscan</MatIcon>Expandable NavRail<MatSlideToggle TValue="bool" ValueChanged="@(e=>RailHoverExpand())"></MatSlideToggle></MatListItem>
+                      @*
                       <MatListItem><MatIcon>align_horizontal_left</MatIcon>Direction: LTR<MatSlideToggle TValue="bool"></MatSlideToggle></MatListItem>
                       <MatListItem><MatIcon>language</MatIcon>Language<MatIcon style="margin-inline-start: auto;">navigate_next</MatIcon></MatListItem>
+                      *@
                       <MatDivider></MatDivider>
                       <MatListItem><MatIcon>logout</MatIcon>Log out</MatListItem>
                     </div>
                   </MatList>
                 </MatMenu>
               </MatAppBarSection>
+              
             </MatAppBarRow>
 
           </MatAppBar>
@@ -75,7 +79,7 @@
 
 @code {
   MatTheme darktheme = new MatTheme()
-    {
+  {
   Background = "#121212",
   Primary = MatThemeColors.DeepPurple._200.Value,
   Secondary = "#FFD740",
@@ -83,11 +87,13 @@
   OnPrimary = "#000",
   OnSecondary = "#000",
   OnSurface = "#FFF"
-    };
+  };
 
   bool _navMenuOpened = true;
   bool _navMinified = true;
+  bool _navHoverExpanded = false;
   public string bbDrawerClass = string.Empty;
+  public string bbDrawerHoverExpand = "false";
 
   void NavToggle()
   {
@@ -129,6 +135,40 @@
     StateHasChanged();
   }
 
+  void RailHoverExpand()
+  {
+    _navHoverExpanded = !_navHoverExpanded;
+
+    if (_navHoverExpanded)
+    {
+      bbDrawerHoverExpand = "true";
+    }
+    else
+    {
+      bbDrawerHoverExpand = "false";
+    }
+
+    StateHasChanged();
+  }
+@*
+  bool _lightThemeEnabled = false;
+
+  public void LightThemeEnabled()
+  {
+    _lightThemeEnabled = !_lightThemeEnabled;
+
+    if (_lightThemeEnabled)
+    {
+      bbLightTheme = "true";
+    }
+    else
+    {
+      bbLightTheme = "false";
+    }
+
+    StateHasChanged();
+  }
+*@
   ForwardRef buttonForwardRef = new ForwardRef();
   BaseMatMenu Menu;
 

@@ -1,0 +1,147 @@
+@page "/overview"
+
+<Title>Overview | GLR Discord Bot </Title>
+
+<section class="intro-container">
+  <MatH2 class="page-header">Overview</MatH2>
+  <MatBody1 class="page-description">Take a look at both server and your stats, or modify basic bot settings here.</MatBody1>
+</section>
+<section class="stats-sec">
+  <MatTabGroup>
+    <MatTab Label="Server">
+      <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner">
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-1">
+            <MatH6 Class="stat-header">Public channels</MatH6>
+            <MatBody2 Class="stat-text">35</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-2">
+            <MatH6 Class="stat-header">Secret channels</MatH6>
+            <MatBody2 Class="stat-text">15</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-3">
+            <MatH6 Class="stat-header">Roles</MatH6>
+            <MatBody2 Class="stat-text">50</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-4">
+            <MatH6 Class="stat-header">Users</MatH6>
+            <MatBody2 Class="stat-text">30,000</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-5">
+            <MatH6 Class="stat-header">Online users</MatH6>
+            <MatBody2 Class="stat-text">1,250</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-6">
+            <MatH6 Class="stat-header">Inactive users</MatH6>
+            <MatBody2 Class="stat-text">6,754</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-7">
+            <MatH6 Class="stat-header">Banned users</MatH6>
+            <MatBody2 Class="stat-text">752</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-8">
+            <MatH6 Class="stat-header">Sent messages</MatH6>
+            <MatBody2 Class="stat-text">1,583,828</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-9">
+            <MatH6 Class="stat-header">Commands</MatH6>
+            <MatBody2 Class="stat-text">48</MatBody2>
+          </div>
+        </div>
+      </div>
+    </MatTab>
+    <MatTab Label="User">
+      <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner">
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-10">
+            <MatH6 Class="stat-header">Level</MatH6>
+            <MatBody2 Class="stat-text">50</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-11">
+            <MatH6 Class="stat-header">Experience</MatH6>
+            <MatBody2 Class="stat-text">25,950 / 30,000</MatBody2>
+          </div>
+          <div class="mat-layout-grid-cell mat-elevation-z1" id="stat-card-12">
+            <MatH6 Class="stat-header">Roles</MatH6>
+            <MatBody2 Class="stat-text">15</MatBody2>
+          </div>
+        </div>
+      </div>
+    </MatTab>
+  </MatTabGroup>
+</section>
+<section Class="stat-vc-sec">
+  <MatH4 Class="section-header">Stats channels</MatH4>
+  <MatBody1 Class="section-description" style="margin-block-end: 24px;">Create, modify or delete voice channels which will work as a statistic counter at the top of the channels list (those are admin-restricted by default).</MatBody1>
+  <MatAccordion Multi="true">
+    <MatExpansionPanel>
+      <MatExpansionPanelSummary>
+        <MatExpansionPanelHeader>Channel 1</MatExpansionPanelHeader>
+        <MatExpansionPanelSubHeader>User count</MatExpansionPanelSubHeader>
+      </MatExpansionPanelSummary>
+      <MatExpansionPanelDetails>
+        <div class="channel-creation-container">
+          <div class="channel-container">
+            <MatStringField Label="Channel name" Class="channel-textfield"></MatStringField>
+            <MatSelect Label="Stat" TValue="string">
+              <MatOptionString>User count</MatOptionString>
+              <MatOptionString>Channel count</MatOptionString>
+              <MatOptionString>Online users</MatOptionString>
+            </MatSelect>
+          </div>
+          <div class="buttons-container">
+            <MatButton Icon="delete" Outlined="true">Delete channel</MatButton>
+            <MatButton Icon="update" Raised="true">Update channel</MatButton>
+          </div>
+        </div>
+      </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+    <MatExpansionPanel>
+      <MatExpansionPanelSummary>
+        <MatExpansionPanelHeader>Channel 2</MatExpansionPanelHeader>
+        <MatExpansionPanelSubHeader>Channel count</MatExpansionPanelSubHeader>
+      </MatExpansionPanelSummary>
+      <MatExpansionPanelDetails>
+        <div class="channel-creation-container">
+          <div class="channel-container">
+            <MatStringField Label="Channel name" Class="channel-textfield"></MatStringField>
+            <MatSelect Label="Stat" TValue="string">
+              <MatOptionString>User count</MatOptionString>
+              <MatOptionString>Channel count</MatOptionString>
+              <MatOptionString>Online users</MatOptionString>
+            </MatSelect>
+          </div>
+          <div class="buttons-container">
+            <MatButton Icon="delete" Outlined="true">Delete channel</MatButton>
+            <MatButton Icon="update" Raised="true">Update channel</MatButton>
+          </div>
+        </div>
+      </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+  </MatAccordion>
+  <MatButton Icon="add" Raised="true" Style="margin-block-start: 24px;">Add new channel</MatButton>
+</section>
+<section class="bot-settings-sec">
+  <MatH4 Class="section-header">Bot settings</MatH4>
+  <MatBody1 Class="section-description" Style="margin-block-end: 24px;">Modify the bot's nickname and/or prefix.</MatBody1>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6 mat-elevation-z1">
+        <MatH4>Nickname</MatH4>
+        <MatBody1>Set the bot's display name in the server.</MatBody1>
+        <div class="bot-settings-container">
+          <MatStringField Label="Nickname" Class="channel-textfield"></MatStringField>
+          <MatButton Icon="update" Raised="true">Update</MatButton>
+        </div>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6 mat-elevation-z1">
+        <MatH4>Prefix</MatH4>
+        <MatBody1>Set the bot's prefix character to be used for its commands.</MatBody1>
+        <div class="bot-settings-container">
+          <MatStringField Label="Prefix" Class="channel-textfield"></MatStringField>
+          <MatButton Icon="update" Raised="true">Update</MatButton>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>

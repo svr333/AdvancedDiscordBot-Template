@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Components
-@page "/MatDrawerFrame"
 
 <MatNavMenu Multi="true">
   <MatNavItem Class="mdc-list-item__ripple" Title="Overview" Href="/overview" AllowSelection="true">
@@ -14,12 +13,15 @@
   <MatNavItem Class="mdc-list-item__ripple" title="Commands" Href="/commands" AllowSelection="true">
     <MatIcon Icon="code"></MatIcon>&nbsp; Commands
   </MatNavItem>
-  <MatDivider></MatDivider>
-  <h6 class="mdc-list-group__subheader">Labels</h6>
-  <MatNavItem Class="mdc-list-item__ripple" title="Leaderboards" Href="/leaderboards" AllowSelection="true">
-    <MatIcon Icon="leaderboard"></MatIcon>&nbsp; Leaderboards
+  <MatNavItem Class="mdc-list-item__ripple" title="Bot logs" Href="/log" AllowSelection="true">
+    <MatIcon Icon="table_rows"></MatIcon>&nbsp; Bot logs
   </MatNavItem>
-  <MatNavSubMenu>
+  <MatDivider></MatDivider>
+  <h6 class="mdc-list-group__subheader">Users</h6>
+  <MatNavItem Class="mdc-list-item__ripple" title="Rankings" Href="/leaderboards" AllowSelection="true">
+    <MatIcon Icon="leaderboard"></MatIcon>&nbsp; Rankings
+  </MatNavItem>
+  @*<MatNavSubMenu>
     <MatNavSubMenuHeader>
       <MatNavItem AllowSelection="true">
         <MatIcon Icon="all_inbox"></MatIcon>&nbsp; Item 3
@@ -45,12 +47,12 @@
       <MatNavItem Class="mdc-list-item__ripple" Title="Item 6.B" AllowSelection="true">Item 6.B</MatNavItem>
       <MatNavItem Class="mdc-list-item__ripple" Title="Item 6.C" AllowSelection="true">Item 6.C</MatNavItem>
     </MatNavSubMenuList>
-  </MatNavSubMenu>
+  </MatNavSubMenu>*@
 </MatNavMenu>
 
 @code {
   [Inject] IJSRuntime JS { get; set; }
-
+  @*
   private bool collapseNavMenu = true;
 
   private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -59,4 +61,5 @@
   {
     collapseNavMenu = !collapseNavMenu;
   }
+  *@
 }
