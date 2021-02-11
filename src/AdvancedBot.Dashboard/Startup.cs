@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace AdvancedBot.Dashboard
 {
@@ -21,14 +22,12 @@ namespace AdvancedBot.Dashboard
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddHeadElementHelper();
-            services.AddSingleton<System.Net.Http.HttpClient>();
+            services.AddSingleton<HttpClient>();
             services.AddResponseCompression();
             services.AddResponseCompression(options =>
             {
