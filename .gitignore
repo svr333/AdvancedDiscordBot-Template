@@ -354,3 +354,5 @@ MigrationBackup/
 *.db
 .vs/
 .vscode/
+
+appsettings.Development.json
