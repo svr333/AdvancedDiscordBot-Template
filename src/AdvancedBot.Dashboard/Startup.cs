@@ -10,6 +10,7 @@ using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace AdvancedBot.Dashboard
 {
@@ -32,7 +33,7 @@ namespace AdvancedBot.Dashboard
             services.AddResponseCompression(options =>
             {
                 IEnumerable<string> MimeTypes = new[] { "text/plain", "text/html", "text/css", "font/woff2", "font/woff", "font/ttf", "application/javascript", "image/x-icon", "image/png" };
-                
+
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
 
@@ -40,10 +41,25 @@ namespace AdvancedBot.Dashboard
                 options.MimeTypes = MimeTypes;
                 options.EnableForHttps = true;
 
-                services.Configure<BrotliCompressionProviderOptions>(options => 
+                services.Configure<BrotliCompressionProviderOptions>(options =>
                 {
                     options.Level = CompressionLevel.Optimal;
                 });
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddDiscord(x =>
+            {
+                x.AppId = Configuration["Discord:ClientId"];
+                x.AppSecret = Configuration["Discord:ClientSecret"];
+                x.SaveTokens = true;
+                x.Scope.Add("guilds");
             });
         }
 
@@ -66,18 +82,20 @@ namespace AdvancedBot.Dashboard
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
     public class CustomCompressionProvider : ICompressionProvider
     {
         public string EncodingName => "br";
-        public bool SupportsFlush => true; 
+        public bool SupportsFlush => true;
         public Stream CreateStream(Stream outputStream) => new BrotliStream(outputStream, CompressionMode.Compress);
     }
 }
