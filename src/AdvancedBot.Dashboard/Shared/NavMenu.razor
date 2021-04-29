@@ -1,37 +1,65 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">AdvancedBot.Dashboard</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@using Microsoft.AspNetCore.Components
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+<MatNavMenu Multi="true">
+  <MatNavItem Class="mdc-list-item__ripple" Title="Overview" Href="/overview" AllowSelection="true">
+    <MatIcon Icon="home"></MatIcon>&nbsp; Overview
+  </MatNavItem>
+  <MatNavItem Title="Webhooks" Href="/hooks" AllowSelection="true">
+    <MatIcon Icon="campaign"></MatIcon>&nbsp; Webhooks
+  </MatNavItem>
+  <MatNavItem Class="mdc-list-item__ripple" title="Moderation" Href="/moderation" AllowSelection="true">
+    <MatIcon Icon="admin_panel_settings"></MatIcon>&nbsp; Moderation
+  </MatNavItem>
+  <MatNavItem Class="mdc-list-item__ripple" title="Commands" Href="/commands" AllowSelection="true">
+    <MatIcon Icon="code"></MatIcon>&nbsp; Commands
+  </MatNavItem>
+  <MatNavItem Class="mdc-list-item__ripple" title="Bot logs" Href="/log" AllowSelection="true">
+    <MatIcon Icon="table_rows"></MatIcon>&nbsp; Bot logs
+  </MatNavItem>
+  <MatDivider></MatDivider>
+  <h6 class="mdc-list-group__subheader">Users</h6>
+  <MatNavItem Class="mdc-list-item__ripple" title="Rankings" Href="/leaderboards" AllowSelection="true">
+    <MatIcon Icon="leaderboard"></MatIcon>&nbsp; Rankings
+  </MatNavItem>
+  @*<MatNavSubMenu>
+    <MatNavSubMenuHeader>
+      <MatNavItem AllowSelection="true">
+        <MatIcon Icon="all_inbox"></MatIcon>&nbsp; Item 3
+      </MatNavItem>
+    </MatNavSubMenuHeader>
+    <MatNavSubMenuList>
+      <MatNavItem Class="mdc-list-item__ripple" Title="Item 3.A" Href="#" AllowSelection="true">Item 3.A&nbsp; <MatIcon Icon="backup"></MatIcon>
+      </MatNavItem>
+      <MatNavItem Class="mdc-list-item__ripple" Title="Item 3.B" AllowSelection="true">Item 3.B&nbsp; <MatIcon Icon="build"></MatIcon>
+      </MatNavItem>
+      <MatNavItem Class="mdc-list-item__ripple" Title="Item 3.C" AllowSelection="true">Item 3.C&nbsp; <MatIcon Icon="explore"></MatIcon>
+      </MatNavItem>
+    </MatNavSubMenuList>
+  </MatNavSubMenu>
+  <MatNavSubMenu>
+    <MatNavSubMenuHeader>
+      <MatNavItem AllowSelection="true">
+        <MatIcon Icon="explore"></MatIcon>&nbsp; Item 6
+      </MatNavItem>
+    </MatNavSubMenuHeader>
+    <MatNavSubMenuList>
+      <MatNavItem Disabled="true" Title="Item 6.A" Href="#" AllowSelection="true">Item 6.A</MatNavItem>
+      <MatNavItem Class="mdc-list-item__ripple" Title="Item 6.B" AllowSelection="true">Item 6.B</MatNavItem>
+      <MatNavItem Class="mdc-list-item__ripple" Title="Item 6.C" AllowSelection="true">Item 6.C</MatNavItem>
+    </MatNavSubMenuList>
+  </MatNavSubMenu>*@
+</MatNavMenu>
 
 @code {
-    private bool collapseNavMenu = true;
+  [Inject] IJSRuntime JS { get; set; }
+  @*
+  private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+  private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+  private void ToggleNavMenu()
+  {
+    collapseNavMenu = !collapseNavMenu;
+  }
+  *@
 }

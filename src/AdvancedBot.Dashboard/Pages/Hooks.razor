@@ -1,0 +1,265 @@
+@page "/hooks"
+
+<Title>Hooks | GLR Discord Bot</Title>
+<link href="/css/prod/hooks.min.css" rel="stylesheet">
+<link href="/css/prod/whitney.min.css" rel="stylesheet">
+
+<div class="mat-layout-grid">
+  <div class="mat-layout-grid-inner">
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" id="message-config">
+      <section class="intro-container">
+        <MatH2 class="page-header">Discord hooks</MatH2>
+        <MatBody1 class="page-description">Here you can build Discord messages using webhooks, allowing to even use
+          custom embeds while doing so. To clear this message and start making your own one, click the <q>clear all</q>
+          button bellow.</MatBody1>
+      </section>
+
+      <section class="buttons-container">
+        <MatButton Raised="true">Backups</MatButton>
+        <MatButton Raised="true">Clear all</MatButton>
+        <MatButton Raised="true">Share message</MatButton>
+      </section>
+
+      <section class="formfield-container">
+        <div class="splitted-textfields">
+          <div class="text-field half-width">
+            <MatTextField TValue="string" Placeholder="https://discord.com/api/webhooks/..." Label="Webhook URL"
+              FullWidth="true" />
+          </div>
+          <MatButton Outlined="true" style="margin-block-start: 8px;">Send</MatButton>
+        </div>
+        <div class="text-field">
+          <MatTextField TValue="string" Placeholder="https://discord.com/api/channels/..." Label="Message link"
+            FullWidth="true" HelperText="When a message link is set, it allows you to edit previously sent messages."
+            HelperTextPersistent="true" />
+        </div>
+        <MatDivider class="section-divider-32"></MatDivider>
+        <div class="text-field">
+          <MatTextField TextArea="true" FullWidth="true" TValue="string" Placeholder="Insert message's contents here."
+            Label="Content" />
+        </div>
+        <div class="splitted-textfields">
+          <div class="text-field half-width">
+            <MatTextField TValue="string" Label="Username" FullWidth="true" />
+          </div>
+          <div class="text-field half-width">
+            <MatTextField TValue="string" Label="Avatar URL" FullWidth="true" />
+          </div>
+        </div>
+        <!-- Replace "x MB" with the file size limit that you want -->
+        <MatBody2>Files <span class="mdc-medium-emphasis">(x MB max)</span></MatBody2>
+        <MatFileUpload AllowMultiple="true" Label="Drop files here or browse"></MatFileUpload>
+        <MatDivider class="section-divider-32"></MatDivider>
+        <MatAccordion Multi="true">
+          <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+              <MatExpansionPanelHeader>Embed 1 — Discord bot</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+              <MatAccordion Multi="true">
+                <MatExpansionPanel>
+                  <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader class="mdc-medium-emphasis">Author</MatExpansionPanelHeader>
+                  </MatExpansionPanelSummary>
+                  <MatExpansionPanelDetails>
+                    <MatTextField TValue="string" Label="Author" FullWidth="true" Class="text-field" />
+                    <div class="splitted-textfields">
+                      <div class="text-field half-width">
+                        <MatTextField TValue="string" Label="Author URL" FullWidth="true"></MatTextField>
+                      </div>
+                      <div class="text-field half-width">
+                        <MatTextField TValue="string" Label="Author icon URL" FullWidth="true"></MatTextField>
+                      </div>
+                    </div>
+                  </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+                <MatExpansionPanel>
+                  <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader class="mdc-medium-emphasis">Body</MatExpansionPanelHeader>
+                  </MatExpansionPanelSummary>
+                  <MatExpansionPanelDetails>
+                    <MatTextField TValue="string" Label="Title" FullWidth="true" Class="text-field" />
+                    <MatTextField TextArea="true" FullWidth="true" TValue="string"
+                      Placeholder="Insert embed's text here." Label="Description" Class="text-field" />
+                    <div class="splitted-textfields with-color">
+                      <div class="half-width">
+                        <MatTextField TValue="string" Label="URL" FullWidth="true"></MatTextField>
+                      </div>
+                      <div class="half-width">
+                        <MatTextField TValue="string" Label="Color" PlaceHolder="#58b9ff" FullWidth="true">
+                        </MatTextField>
+                      </div>
+                      <!-- background-color should dynamically change based on user's input on above textfield. -->
+                      <div role="presentation" class="color-presentation" style="background-color: rgb(88, 185, 255);">
+                      </div>
+                      <!-- <input type="color" id="favcolor" name="favcolor" value="#58b9ff"> -->
+                    </div>
+                  </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+                <MatExpansionPanel>
+                  <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader class="mdc-medium-emphasis">Fields</MatExpansionPanelHeader>
+                  </MatExpansionPanelSummary>
+                  <MatExpansionPanelDetails>
+                    <MatAccordion>
+                      <MatExpansionPanel>
+                        <MatExpansionPanelSummary>
+                          <MatExpansionPanelHeader class="mdc-medium-emphasis">Field 1 — FIELD_NAME
+                          </MatExpansionPanelHeader>
+                        </MatExpansionPanelSummary>
+                        <MatExpansionPanelDetails>
+                          <div class="splitted-textfields">
+                            <MatTextField TValue="string" Label="Title" FullWidth="true" Class="text-field" />
+                            <MatCheckbox TValue="bool">Inline</MatCheckbox>
+                          </div>
+                          <MatTextField TextArea="true" FullWidth="true" TValue="string"
+                            Placeholder="Insert embed's text here." Label="Description" Class="text-field" />
+                        </MatExpansionPanelDetails>
+                      </MatExpansionPanel>
+                    </MatAccordion>
+                    <MatButton Icon="add" Raised="true" Style="margin-block-start: 16px;">Add field</MatButton>
+                  </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+                <MatExpansionPanel>
+                  <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader class="mdc-medium-emphasis">Images</MatExpansionPanelHeader>
+                  </MatExpansionPanelSummary>
+                  <MatExpansionPanelDetails>
+                    <div class="images-form">
+                      <MatTextField TValue="string" Label="Image URLs" FullWidth="true"
+                        HelperText="Adding up to 4 images is possible when the URL in the Body section is set."
+                        HelperTextPersistent="true" Class="text-field" />
+                      <MatTextField TValue="string" Label="Thumbnail URL" FullWidth="true" />
+                    </div>
+                  </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+                <MatExpansionPanel>
+                  <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader class="mdc-medium-emphasis">Footer</MatExpansionPanelHeader>
+                  </MatExpansionPanelSummary>
+                  <MatExpansionPanelDetails>
+                    <MatTextField TValue="string" Label="Footer title" FullWidth="true" Class="text-field" />
+                    <div class="splitted-textfields with-color">
+                      <div style="flex: 1;">
+                        <MatDatePicker TValue="DateTime" Format="dd/MM/yy H:mm:ss" Label="Timestamp"></MatDatePicker>
+                      </div>
+                      <div class="half-width">
+                        <MatTextField TValue="string" Label="Footer icon URL" FullWidth="true"></MatTextField>
+                      </div>
+                    </div>
+                  </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+              </MatAccordion>
+            </MatExpansionPanelDetails>
+          </MatExpansionPanel>
+          <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+              <MatExpansionPanelHeader>Embed 2 — What's this?</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+              <MatBody1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, unde consequuntur. Ut suscipit
+                omnis maxime,
+                corporis obcaecati iste repellendus, blanditiis excepturi ullam laborum ratione voluptatum odio quisquam
+                eligendi at culpa.</MatBody1>
+            </MatExpansionPanelDetails>
+          </MatExpansionPanel>
+        </MatAccordion>
+      </section>
+    </div>
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" id="visual-demo">
+      <MatH2 class="page-header">Preview</MatH2>
+      <!-- NOTE: This is just an example preview. You'll probably want to delete this to make it generate itself through filling
+      the form on the left part of the page. This is just to show how the page supports Discord's design in terms of messages and
+      embeds. -->
+      <div class="message-container">
+        <div class="message">
+          <div class="contents">
+            <img src="../assets/avatars/avatar-discord.png" width="40" height="40" aria-hidden="true" class="avatar" loading="lazy">
+            <h2 class="header">
+              <span class="username-text">GLR Bot</span>
+              <span class="bot-tag"><span class="bot-text">BOT</span></span>
+            </h2>
+            <span class="timestamp">Today at 12:00 PM</span>
+            <div class="message-content">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta earum, sunt quas dolor rem, consequuntur assumenda quo reiciendis fugiat reprehenderit praesentium. Aliquid magni nesciunt nulla tempora eius voluptatum repudiandae mollitia?
+              This is a <a title="link example" href="https://discohook.app/bot" rel="noreferrer noopener" target="_blank" role="button" tabindex="0">link example</a> stolen from Discohook because yolo.
+              <em>Italic text</em>
+              <strong>Bold text</strong>
+              <u>Underline text</u>
+              <s>Striked text</s>
+              <div class="blockquote-container"><div class="blockquote-divider"></div><blockquote>Quote text</blockquote></div>
+              <code class="inline">code text</code>
+              <span class="spoiler-text">Spoiler text</span>
+              <pre><code class="scrollbarGhost">code block text</code></pre>
+              Hello world.
+            </div>
+          </div>
+          <div class="embeds-container">
+            <!-- Embeds' width is determined automatically by Discord; can't tell exactly which width will it use once the
+            messages had been published. border-color should dynamically change with the rgb value of the hex value that
+            the user inputs on the 'color' text field. If you want to, delete the 'max-width' property bellow and let the
+            element automatically add it's width. -->
+            <div class="embed-wrapper" aria-hidden="false" style="max-width: 332px; border-color: rgb(238, 110, 110);">
+              <div class="embed-grid has-thumbnail">
+                <div class="embed-author embed-margin">
+                  <img loading="lazy" alt class="embed-author__icon" src="https://images-ext-1.discordapp.net/external/gSRqi9B3CH_gksbfNzWiNQFiw6Z8_DhcjQdjfohiZ80/https/upload.wikimedia.org/wikipedia/commons/2/2d/Google-favicon-2015.png">
+                  <a class="embed-author__link" tabindex="0" href="https://google.com/" rel="noreferrer noopener" target="_blank" role="button">Author name (e.g. Google)</a>
+                </div>
+                <div class="embed-title embed-margin">
+                  <a class="embed-title__link" tabindex="0" href="https://youtube.com/" rel="noreferrer noopener" target="_blank" role="button">Body title (with link: yt.com)</a>
+                </div>
+                <div class="embed-description embed-margin">Aut non atque sint tempora reprehenderit incidunt est quibusdam. Quas esse id molestiae earum delectus ut et. Sunt quis perspiciatis et. Eaque enim id et omnis consequuntur repellat ratione occaecati.</div>
+                <div class="embed-fields embed-margin">
+                  <!-- Tri-column layout - maximum -->
+                  <div class="embed-field" style="grid-column: 1 / 5;">
+                    <div class="embed-field__name">Field 1 name</div>
+                    <div class="embed-field__value">Aut ut nobis sapiente architecto ipsa aut natus officiis iure sunt voluptate molestiae voluptas provident cupiditate dolor modi aut ut.</div>
+                  </div>
+                  <div class="embed-field" style="grid-column: 5 / 9;">
+                    <div class="embed-field__name">Field 2 name</div>
+                    <div class="embed-field__value">Aut ut nobis sapiente architecto ipsa aut natus officiis iure sunt voluptate molestiae voluptas provident cupiditate dolor modi aut ut.</div>
+                  </div>
+                  <div class="embed-field" style="grid-column: 9 / 13;">
+                    <div class="embed-field__name">Field 3 name</div>
+                    <div class="embed-field__value">Aut ut nobis sapiente architecto ipsa aut natus officiis iure sunt voluptate molestiae voluptas provident cupiditate dolor modi aut ut.</div>
+                  </div>
+                  <!-- Double column layout -->
+                  <div class="embed-field" style="grid-column: 1 / 7;">
+                    <div class="embed-field__name">Field 4 name</div>
+                    <div class="embed-field__value">Aut ut nobis sapiente architecto ipsa aut natus officiis iure sunt voluptate molestiae voluptas provident cupiditate dolor modi aut ut.</div>
+                  </div>
+                  <div class="embed-field" style="grid-column: 7 / 13;">
+                    <div class="embed-field__name">Field 5 name</div>
+                    <div class="embed-field__value">Aut ut nobis sapiente architecto ipsa aut natus officiis iure sunt voluptate molestiae voluptas provident cupiditate dolor modi aut ut.</div>
+                  </div>
+                  <!-- Single column layout - minimum -->
+                  <div class="embed-field" style="grid-column: 1 / 13;">
+                    <div class="embed-field__name">Field 6 name</div>
+                    <div class="embed-field__value">Aut ut nobis sapiente architecto ipsa aut natus officiis iure sunt voluptate molestiae voluptas provident cupiditate dolor modi aut ut.</div>
+                  </div>
+                </div>
+                <div class="embed-gallery embed-margin">
+                  <!-- Gallery's height is also probably automatically generated by Discord depending on images' width / height... -->
+                  <div class="embed-gallery__side" style="height: 300px;">
+                    <img loading="lazy" class="embed-gallery__image" alt src="https://images-ext-1.discordapp.net/external/Y9ec_ju_jMFXEYbE-Ie5kPp5R5im0556dCBV7EPvn8M/https/www.youtube.com/img/desktop/yt_1200.png?width=300&height=300">
+                    <img loading="lazy" class="embed-gallery__image" alt src="https://images-ext-2.discordapp.net/external/aKpeaMc3cRzU0yuQta6g8YUnVPTjkdfVO3TNFNrbTIM/%3Fsqp%3D-oaymwEZCNAFEJQDSFXyq4qpAwsIARUAAIhCGAFwAQ%3D%3D%26rs%3DAOn4CLAY4CL6LjcKZz0NfZWlFWImdBvukQ/https/i.ytimg.com/vi/ZjUzMd6p4R8/hq720.jpg?width=400&height=224">
+                  </div>
+                  <div class="embed-gallery__side" style="height: 300px;">
+                    <img loading="lazy" class="embed-gallery__image" alt src="https://images-ext-1.discordapp.net/external/sP16GIlfXx4s_a81CzKMeFQq98sNr1OwfrSoiPZZTVo/%3Fsqp%3D-oaymwEZCNAFEJQDSFXyq4qpAwsIARUAAIhCGAFwAQ%3D%3D%26rs%3DAOn4CLCyaejafdloYH7GHVbLstiYIBvJiw/https/i.ytimg.com/vi/Q9KcDK5mb3o/hq720.jpg?width=400&height=224">
+                    <img loading="lazy" class="embed-gallery__image" alt src="https://images-ext-1.discordapp.net/external/X8EQJ70Otgou-ECecm7AdO9w45x3IJpsqKV8MVNDme8/%3Fsqp%3D-oaymwEZCNAFEJQDSFXyq4qpAwsIARUAAIhCGAFwAQ%3D%3D%26rs%3DAOn4CLCPv38oG12GouS0pdrOzOgiQbqDhQ/https/i.ytimg.com/vi/lAqiHTwcXOY/hq720.jpg?width=400&height=224">
+                  </div>
+                </div>
+                <!-- Thumbnail's width and height might be smaller if the image's width / height < 80px. -->
+                <img loading="lazy" alt class="embed-thumbnail" src="https://images-ext-2.discordapp.net/external/__iXXbjhH1wtX-aiPPa_w9V0cgjw4wquSp5-cCDmMJY/https/instagram.com/static/images/ico/favicon-192.png/68d99ba29cc8.png?width=80&height=80" style="width: 80px; height: 80px;">
+                <div class="embed-footer embed-margin">
+                  <img loading="lazy" alt class="embed-footer__icon" src="https://images-ext-1.discordapp.net/external/_xhD3wmmzJMjcQxDhXloD1JjTWpnTCBar5q5fLeB0MU/https/www.youtube.com/s/desktop/592b853b/img/favicon_144.png">
+                  <span class="embed-footer__text">Footer title <span class="embed-footer__text-separator">•</span>12/31/2020</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

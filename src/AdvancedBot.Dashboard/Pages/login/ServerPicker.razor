@@ -1,0 +1,177 @@
+@page "/server-picker"
+@namespace AdvancedBot.Dashboard.Pages
+
+<Title>Select server | GLR Discord Bot</Title>
+<Link rel="stylesheet" href="/css/server-picker.css" />
+
+<NavBarLogin />
+
+<div class="header-section">
+  <h2 class="picker-header">Before we get started, please select a server.</h2>
+</div>
+<div class="server-carousel">
+  <ul class="carousel-list">
+    <!-- Card 1 -->
+    <li class="carousel-card">
+      <MatCard class="server-not-joined">
+        <div class="mat-card-content">
+          <MatHeadline6>
+            Server name 1
+          </MatHeadline6>
+          <MatBlazor.MatOverline>
+            Not invited
+          </MatBlazor.MatOverline>
+        </div>
+        <MatCardContent>
+          <MatCardMedia Square="true"
+            ImageUrl="https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+          </MatCardMedia>
+          <MatBody2 class="mat-card-content">
+            Bot NOT invited on this server. Invite it to get started!
+          </MatBody2>
+        </MatCardContent>
+        <MatCardActions class="centered-buttons">
+          <MatCardActionButtons>
+            <MatButton Icon="login">Invite</MatButton>
+          </MatCardActionButtons>
+        </MatCardActions>
+      </MatCard>
+    </li>
+        <!-- Card 2 -->
+    <li class="carousel-card">
+      <MatCard>
+        <div class="mat-card-content">
+          <MatHeadline6>
+            Server name 2
+          </MatHeadline6>
+          <MatOverline>
+            Invited
+          </MatOverline>
+        </div>
+        <MatCardContent>
+          <MatCardMedia Square="true"
+            ImageUrl="https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+          </MatCardMedia>
+          <MatBody2 class="mat-card-content">
+            Manage bot settings on this server.
+          </MatBody2>
+        </MatCardContent>
+        <MatCardActions class="centered-buttons">
+          <MatCardActionButtons>
+            <MatButton>Start</MatButton>
+          </MatCardActionButtons>
+        </MatCardActions>
+      </MatCard>
+    </li>
+    <!-- Card 1 -->
+    <li class="carousel-card">
+      <MatCard class="server-not-joined">
+        <div class="mat-card-content">
+          <MatHeadline6>
+            Server name 1
+          </MatHeadline6>
+          <MatBlazor.MatOverline>
+            Not invited
+          </MatBlazor.MatOverline>
+        </div>
+        <MatCardContent>
+          <MatCardMedia Square="true"
+            ImageUrl="https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+          </MatCardMedia>
+          <MatBody2 class="mat-card-content">
+            Bot NOT invited on this server. Invite it to get started!
+          </MatBody2>
+        </MatCardContent>
+        <MatCardActions class="centered-buttons">
+          <MatCardActionButtons>
+            <MatButton Icon="login">Invite</MatButton>
+          </MatCardActionButtons>
+        </MatCardActions>
+      </MatCard>
+    </li>
+        <!-- Card 2 -->
+    <li class="carousel-card">
+      <MatCard>
+        <div class="mat-card-content">
+          <MatHeadline6>
+            Server name 2
+          </MatHeadline6>
+          <MatOverline>
+            Invited
+          </MatOverline>
+        </div>
+        <MatCardContent>
+          <MatCardMedia Square="true"
+            ImageUrl="https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+          </MatCardMedia>
+          <MatBody2 class="mat-card-content">
+            Manage bot settings on this server.
+          </MatBody2>
+        </MatCardContent>
+        <MatCardActions class="centered-buttons">
+          <MatCardActionButtons>
+            <MatButton>Start</MatButton>
+          </MatCardActionButtons>
+        </MatCardActions>
+      </MatCard>
+    </li>
+    <!-- Card 1 -->
+    <li class="carousel-card">
+      <MatCard class="server-not-joined">
+        <div class="mat-card-content">
+          <MatHeadline6>
+            Server name 1
+          </MatHeadline6>
+          <MatBlazor.MatOverline>
+            Not invited
+          </MatBlazor.MatOverline>
+        </div>
+        <MatCardContent>
+          <MatCardMedia Square="true"
+            ImageUrl="https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+          </MatCardMedia>
+          <MatBody2 class="mat-card-content">
+            Bot NOT invited on this server. Invite it to get started!
+          </MatBody2>
+        </MatCardContent>
+        <MatCardActions class="centered-buttons">
+          <MatCardActionButtons>
+            <MatButton Icon="login">Invite</MatButton>
+          </MatCardActionButtons>
+        </MatCardActions>
+      </MatCard>
+    </li>
+        <!-- Card 2 -->
+    <li class="carousel-card">
+      <MatCard>
+        <div class="mat-card-content">
+          <MatHeadline6>
+            Server name 2
+          </MatHeadline6>
+          <MatOverline>
+            Invited
+          </MatOverline>
+        </div>
+        <MatCardContent>
+          <MatCardMedia Square="true"
+            ImageUrl="https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+          </MatCardMedia>
+          <MatBody2 class="mat-card-content">
+            Manage bot settings on this server.
+          </MatBody2>
+        </MatCardContent>
+        <MatCardActions class="centered-buttons">
+          <MatCardActionButtons>
+            <MatButton>Start</MatButton>
+          </MatCardActionButtons>
+        </MatCardActions>
+      </MatCard>
+    </li>
+  </ul>
+</div>
+
+<MatTooltip Tooltip="Add to server" Wrap="true" Position="@MatTooltipPosition.Top">
+  <MatFAB Icon="@MatIconNames.Add" RefBack="@context" class="app-fab--absolute">
+    <MatRipple></MatRipple>
+  </MatFAB>
+</MatTooltip>

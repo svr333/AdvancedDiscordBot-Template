@@ -1,0 +1,466 @@
+@page "/leaderboards"
+
+<Title>Leaderboards | GLR Discord Bot</Title>
+
+<section class="intro-container" style="position: relative;">
+  <div class="info-button-container">
+    <MatIconButton Id="info-button" Icon="help" OnClick="@OpenInfoDialog" title="XP systems info"></MatIconButton>
+  </div>
+  <MatH2 class="page-header">Leaderboards</MatH2>
+  <MatBody1 class="page-description">Take a look at the top most active users on the server, and modify settings related
+    to the Experience System here.</MatBody1>
+</section>
+
+<section class="leaderboards-tables">
+  <MatH4 class="section-header">Leaderboard</MatH4>
+  <MatBody2>The most active users on the servers are listed here.</MatBody2>
+  <MatTable Items="@xpusers" Striped="true" class="mat-elevation-z5" id="ranked-users__table">
+    <MatTableHeader>
+      <th class="user-list__header--checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></th>
+      <th class="user-list__header--pfp">Avatar</th>
+      <th class="user-list__header--name">Name</th>
+      <th class="user-list__header--warns">Rank</th>
+      <th class="user-list__header--reassons">XP</th>
+      <th class="user-list__header--actions">Actions</th>
+    </MatTableHeader>
+    <MatTableRow>
+      <td class="user-list__checkbox"><MatCheckbox @bind-Value="@checked2"></MatCheckbox></td>
+      <td class="user-list__pfp"><img src="@context.Avatar" loading="lazy" width="32" height="32" alt="@context.Name's profile picture" title="@context.Name's profile picture"></td>
+      <td class="user-list__name">
+        <MatTooltip Tooltip="@context.Id" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__id">
+          <ChildContent Context="another_name">@context.Name</ChildContent>
+        </MatTooltip>
+        @*
+        <MatTooltip Tooltip="Copy user's ID" Position="@MatTooltipPosition.Top" Wrap="true" id="user-list__copy-id-tooltip">
+          <ChildContent Context="another_name"><MatIconButton Icon="content_copy" id="user-list__copy-id-button"></MatIconButton></ChildContent>
+        </MatTooltip>
+        *@
+      </td>
+      <td class="user-list__rank">#@context.Rank</td>
+      <td class="user-list__xp">@context.Xp</td>
+      <td class="user-list__actions">
+        <MatIconButton Icon="more_vert" OnClick="@OnClick" RefBack="@buttonForwardRef"></MatIconButton>
+        <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+          <MatList>
+            <MatListItem>Give warn</MatListItem>
+            <MatListItem>Remove last warn</MatListItem>
+            <MatListItem>Mute</MatListItem>
+            <MatListItem>Kick</MatListItem>
+            <MatListItem>Ban</MatListItem>
+          </MatList>
+        </MatMenu>
+      </td>
+    </MatTableRow>
+  </MatTable>
+</section>
+
+<section class="level-up-msg-sec">
+  <MatH3>Level-up message</MatH3>
+  <MatBody2 class="mdc-high-emphasis">Modify the personalized message the bot will send upon leveling up.</MatBody2>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+        <MatPaper Elevation="1">
+          <MatH4 class="section-header">Channel</MatH4>
+          <MatBody2>Select which channel will the bot send the level-up message.</MatBody2>
+          <MatDivider class="section-divider-18"></MatDivider>
+          <MatSelect Label="Channel name" TValue="string">
+            <MatOptionString>None (disabled)</MatOptionString>
+            <MatOptionString>Current channel</MatOptionString>
+            <MatOptionString>#chat-english</MatOptionString>
+            <MatOptionString>#chat-español</MatOptionString>
+            <MatOptionString>#porn-chat</MatOptionString>
+            <MatOptionString>#logs</MatOptionString>
+          </MatSelect>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+        <MatPaper Elevation="1">
+          <MatH4 class="section-header">Message</MatH4>
+          <MatBody2>Type the message the bot will send.</MatBody2>
+          <MatDivider class="section-divider-18"></MatDivider>
+          <MatTextField TValue="string" PlaceHolder="Congratulations! You leveled up!" Label="Message"
+            FullWidth="true" />
+        </MatPaper>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="role-rewards-sec">
+  <MatH3>Role rewards</MatH3>
+  <MatBody2 class="mdc-high-emphasis">Automatically give a role as a reward to a user upon reaching certain level.</MatBody2>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+        <MatPaper Elevation="1">
+          <MatH4 class="section-header">Stacking rewards</MatH4>
+          <MatBody2 class="mdc-high-emphasis">Determines wether the user accumulates roles when leveling up or not.</MatBody2>
+          <MatDivider class="section-divider-18"></MatDivider>
+          <MatRadioGroup TValue="string">
+            <div class="role-rewards-stacking__container">
+              <MatRadioButton Value="@("stack")" TValue="string"></MatRadioButton>
+              <MatList TwoLine="true">
+                <MatListItem>
+                  <MatListItemText>
+                    <MatListItemPrimaryText>Stack rewards</MatListItemPrimaryText>
+                    <MatListItemSecondaryText>The user can have multiple rewards at once.</MatListItemSecondaryText>
+                  </MatListItemText>
+                </MatListItem>
+              </MatList>
+            </div>
+            <div class="role-rewards-stacking__container">
+              <MatRadioButton Value="@("replace")" TValue="string"></MatRadioButton>
+              <MatList TwoLine="true">
+                <MatListItem>
+                  <MatListItemText>
+                    <MatListItemPrimaryText>Replace rewards</MatListItemPrimaryText>
+                    <MatListItemSecondaryText>The user will have only the last reward role obtained. The previous one is removed.</MatListItemSecondaryText>
+                  </MatListItemText>
+                </MatListItem>
+              </MatList>
+            </div>
+          </MatRadioGroup>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+        <MatPaper Elevation="1">
+          <MatH4 Class="section-header">Role reward(s)</MatH4>
+          <MatBody2 Class="mdc-high-emphasis">Select the role to give to the user upon leveling up.</MatBody2>
+          <MatDivider Class="section-divider-18"></MatDivider>
+          <MatSelect Label="Select role" FullWidth="true" TValue="string">
+            <MatOptionString>None (disabled)</MatOptionString>
+            <MatOptionString>Starling</MatOptionString>
+            <MatOptionString>Marine</MatOptionString>
+            <MatOptionString>Bazooka</MatOptionString>
+            <MatOptionString>Starlinator</MatOptionString>
+            <MatOptionString>TwoBits' been here :)</MatOptionString>
+          </MatSelect>
+        </MatPaper>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="xp-settings-sec">
+  <MatH3>XP Multiplier</MatH3>
+  <MatBody2 Class="mdc-high-emphasis">Modify the amount of XP obtained when chatting.</MatBody2>
+  @* Uh... this should range from x0.25 to x3*@
+  <MatSlider Step="0.25D" EnableStep="true" ValueMin="0.25D" ValueMax="3" Markers="true" Pin="true" TValue="double" Discrete="true" Value="1"></MatSlider>
+</section>
+
+<section class="xp-blacklists-sec">
+  <MatH3>Blacklists</MatH3>
+  <MatBody2 class="mdc-high-emphasis">Prevent certain roles and / or channels from providing XP to the user.</MatBody2>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+        <MatPaper Elevation="1">
+          <MatH4 class="section-header">Roles</MatH4>
+          <MatBody2 class="mdc-high-emphasis">Set which roles won't earn XP nor level up when chatting.</MatBody2>
+          <MatDivider class="section-divider-18"></MatDivider>
+          <div class="roles-list-container">
+            @* This makes so when you click the "+" button, a new chip (that small rounded rectangle with text inside)
+              will appear. You'll probably want to make it appear a dropdown menu list with the server channels in
+              there and after selecting the channel, add the chip. Idk how 2 do that. Pro C# stuff I guess. ¯\_(ツ)_/¯ *@
+            <MatChipSet @ref="chipset" @bind-SelectedChip="selectedChip">
+              <MatIconButton class="mr-2" Icon="add" @onclick="OnAddOption" Id="AddRoleButton"></MatIconButton>
+              @foreach (var option in labels)
+              {
+                <MatChip class="mt-1" Label=@option LeadingIcon="clear" TrailingIconClick="OnTrailingIconClick"
+                  Id="RoleChip"></MatChip>
+              }
+            </MatChipSet>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+        <MatPaper Elevation="1">
+          <MatH4 class="section-header">Channels</MatH4>
+          <MatBody2 class="mdc-high-emphasis">Set which channels won't give XP when chatting in there.</MatBody2>
+          <MatDivider class="section-divider-18"></MatDivider>
+          @* Same here. More of your C# magic goes here I guess. :p *@
+          <div class="channels-list-container">
+            <ul class="channels-list">
+              <li class="channel">
+                <svg width="24" height="24" class="jbvrpb-10 hGpXtv" viewBox="0 0 24 24">
+                  <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M5.88657 21C5.57547 21 5.3399 20.7189 5.39427 20.4126L6.00001 17H2.59511C2.28449 17 2.04905 16.7198 2.10259 16.4138L2.27759 15.4138C2.31946 15.1746 2.52722 15 2.77011 15H6.35001L7.41001 9H4.00511C3.69449 9 3.45905 8.71977 3.51259 8.41381L3.68759 7.41381C3.72946 7.17456 3.93722 7 4.18011 7H7.76001L8.39677 3.41262C8.43914 3.17391 8.64664 3 8.88907 3H9.87344C10.1845 3 10.4201 3.28107 10.3657 3.58738L9.76001 7H15.76L16.3968 3.41262C16.4391 3.17391 16.6466 3 16.8891 3H17.8734C18.1845 3 18.4201 3.28107 18.3657 3.58738L17.76 7H21.1649C21.4755 7 21.711 7.28023 21.6574 7.58619L21.4824 8.58619C21.4406 8.82544 21.2328 9 20.9899 9H17.41L16.35 15H19.7549C20.0655 15 20.301 15.2802 20.2474 15.5862L20.0724 16.5862C20.0306 16.8254 19.8228 17 19.5799 17H16L15.3632 20.5874C15.3209 20.8261 15.1134 21 14.8709 21H13.8866C13.5755 21 13.3399 20.7189 13.3943 20.4126L14 17H8.00001L7.36325 20.5874C7.32088 20.8261 7.11337 21 6.87094 21H5.88657ZM9.41045 9L8.35045 15H14.3504L15.4104 9H9.41045Z"></path>
+                </svg>
+                <span class="channel-name">play-the-game</span>
+                <button class="close-button"><i class="material-icons">close</i></button>
+              </li>
+              <li class="channel">
+                <svg width="24" height="24" class="jbvrpb-10 hGpXtv" viewBox="0 0 24 24">
+                  <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M5.88657 21C5.57547 21 5.3399 20.7189 5.39427 20.4126L6.00001 17H2.59511C2.28449 17 2.04905 16.7198 2.10259 16.4138L2.27759 15.4138C2.31946 15.1746 2.52722 15 2.77011 15H6.35001L7.41001 9H4.00511C3.69449 9 3.45905 8.71977 3.51259 8.41381L3.68759 7.41381C3.72946 7.17456 3.93722 7 4.18011 7H7.76001L8.39677 3.41262C8.43914 3.17391 8.64664 3 8.88907 3H9.87344C10.1845 3 10.4201 3.28107 10.3657 3.58738L9.76001 7H15.76L16.3968 3.41262C16.4391 3.17391 16.6466 3 16.8891 3H17.8734C18.1845 3 18.4201 3.28107 18.3657 3.58738L17.76 7H21.1649C21.4755 7 21.711 7.28023 21.6574 7.58619L21.4824 8.58619C21.4406 8.82544 21.2328 9 20.9899 9H17.41L16.35 15H19.7549C20.0655 15 20.301 15.2802 20.2474 15.5862L20.0724 16.5862C20.0306 16.8254 19.8228 17 19.5799 17H16L15.3632 20.5874C15.3209 20.8261 15.1134 21 14.8709 21H13.8866C13.5755 21 13.3399 20.7189 13.3943 20.4126L14 17H8.00001L7.36325 20.5874C7.32088 20.8261 7.11337 21 6.87094 21H5.88657ZM9.41045 9L8.35045 15H14.3504L15.4104 9H9.41045Z"></path>
+                </svg>
+                <span class="channel-name">play-the-game</span>
+                <button class="close-button"><i class="material-icons">close</i></button>
+              </li>
+              <li class="add-channel-button">
+                <MatIconButton class="mr-3" Icon="add" Id="AddRoleButton"></MatIconButton>
+              </li>
+            </ul>
+          </div>
+        </MatPaper>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="role-rewards-sec">
+  <MatH3>Commands</MatH3>
+  <MatBody2 class="mdc-high-emphasis">Quick access to xp-related commands and their configurations.</MatBody2>
+  <div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!give-xp</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Give a set amount of XP to anyone on the server.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!remove-xp</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Remove a set amount of XP from anyone on the server.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!xp-leaderboard</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>View the server's XP leaderboard.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+      <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <MatPaper Elevation="1">
+          <div class="xp-commands__container">
+            <MatSlideToggle TValue="bool"></MatSlideToggle>
+            <MatList TwoLine="true">
+              <MatListItem>
+                <MatListItemText>
+                  <MatListItemPrimaryText>!xp-rank</MatListItemPrimaryText>
+                  <MatListItemSecondaryText>Get your XP rank or someone else's XP rank.</MatListItemSecondaryText>
+                </MatListItemText>
+              </MatListItem>
+            </MatList>
+          </div>
+        </MatPaper>
+      </div>
+    </div>
+  </div>
+</section>
+
+@* Info dialog *@
+<MatDialog @bind-IsOpen="@infoDialogIsOpen" Id="xp-info-dialog">
+  <MatDialogTitle>How does the XP system work?</MatDialogTitle>
+  <MatDialogContent>
+    <MatBody2 Class="dialog-paragraph">You'll have to stick with me here, this can get quite complicated quite quickly.
+You don't need any maths knowledge for this UNLESS you want a custom level system.
+I have a set of base systems you can pick from. Namely:</MatBody2>
+
+    <ul class="dialog-ul">
+      <li class="dialog-li">Mee6</li>
+      <li class="dialog-li">FastMee6</li>
+      <li class="dialog-li">Tatsumaki</li>
+      <li class="dialog-li">Stagnation</li>
+      <li class="dialog-li">Cusom</li>
+    </ul>
+
+    <MatH5 Class="dialog-header5">Mee6</MatH5>
+    <MatBody2 Class="dialog-paragraph">Mee6's system is named after, drum rolls please, MEE6!
+Mee6 calculates exp as follows: <code>y = 5x² + 50x + 100</code>.
+<code>y</code> => exp needed for the next level
+<code>x</code> => the level you want to calculate the needed exp for.</MatBody2>
+
+    <MatBody2 Class="dialog-paragraph">For example, for level 4 you would need <code>all the exp for previous levels</code> + <code>the result of 5*4² + 50*4 + 100 (=380)</code>.
+Which would result in a total of 770 exp required experience.</MatBody2>
+
+    <MatBody2 Class="dialog-paragraph">More information & explanation can be found <a href="https://mee6.github.io/Mee6-documentation/levelxp/" target="_blank" rel="external noopener">here</a>. <a href="https://mee6.github.io/Mee6-documentation/mee6calc/" target="_blank" rel="external noopener">Easy to use Mee6 level calculator</a></MatBody2>
+
+    <MatH5 Class="dialog-header5">FastMee6</MatH5>
+    <MatBody2 Class="dialog-paragraph">It says it in the name itself, it's a faster version of Mee6's system.
+The formula for this system is <code>y = 2x² + 25x + 100</code>
+<code>y</code> => exp needed for the next level
+<code>x</code> => the level you want to calculate the needed exp for.</MatBody2>
+    <MatBody2 Class="dialog-paragraph">Compared to Mee6, when you're <code>level 32</code>, you'd be <code>level 39</code> with this system. Compared to Mee6, when you're <code>level 69</code>, you'd be <code>level 96</code> with this system. (the start is almost as fast as Mee6, the higher the level the less xp required compared to <code>Mee6</code>.)</MatBody2>
+
+    <MatH5 Class="dialog-header5">Tatsumaki</MatH5>
+    <MatBody2 Class="dialog-paragraph">Tatsumaki works a bit differently from both <code>Mee6</code> and <code>FastMee6</code>. The formula that Tatsumaki's devs used calculates all the exp needed for the level. Formula: <code>y = 625x²/9</code>. <code>y</code> => total exp needed for the level <code>x</code></MatBody2>
+
+    <MatBody2 Class="dialog-paragraph">To calculate how much exp you need to reach <code>level 69</code>, you just fill 69 in on the place of the x. <code>(625*69²) / 9</code> => 330,625 exp needed to get from <code>level 0</code> to <code>level 69</code></MatBody2>
+
+    <MatH5 Class="dialog-header5">Stagnation</MatH5>
+    <MatBody2 Class="dialog-paragraph">This is where things start to get a little more complicated.
+The calculation of the exp required for the next level is split into two formulas.</MatBody2>
+
+    <MatTable Items="@xpformulas" ShowPaging="false">
+      <MatTableHeader>
+        <th style="min-width: 15ch;">Formulas</th>
+        <th>When used</th>
+      </MatTableHeader>
+      <MatTableRow>
+        <td>@context.FormName</td>
+        <td>@context.FormUse</td>
+      </MatTableRow>
+      <MatTableRow>
+        <td>@context.FormName</td>
+        <td>@context.FormUse</td>
+      </MatTableRow>
+    </MatTable>
+
+    <MatBody2 Class="dialog-paragraph">y => exp needed for the next level
+x => level you want to calculate the needed exp for</MatBody2>
+
+    <MatBody2 Class="dialog-paragraph">Note: This is the only levelsystem with 2 different formulas. (if you <a href="https://www.paypal.me/SenneVR" target="_blank" rel="external noopener">pay me a fiver</a> I'll make another system just for you with two different formulas :)</MatBody2>
+
+    <MatH5 Class="dialog-header5">Custom</MatH5>
+    <MatBody2 Class="dialog-paragraph">This is where things can get a little tricky, so read attentively.
+There is a system so you can create a levelsystem to your desire.
+As you may have noticed from the other formulas, every formula can be derived from one base formula:
+<code>y = ax² + bx + c</code>
+<code>a, b and c</code> are elements of the real numbers.
+<code>y</code> is the exp needed to reach level <code>x</code>.</MatBody2>
+
+    <MatBody2 Class="dialog-paragraph">Now, let's say you want to have the formula y = 10x² + 500 used in your server.
+That can be done pretty easily by executing the next command:
+Stach <code>SetLevelSystem Custom,10,0,500</code>
+Stach <code>SLS Custom,10,0,500</code></MatBody2>
+
+    <MatBody2 Class="dialog-paragraph">The first number stands for the <code>a</code>, second for the <code>b</code> and the third number for the <code>c</code>.
+It may look complicated, but it's quite simple. And that's all I have to say about that.</MatBody2>
+  </MatDialogContent>
+  <MatDialogActions>
+    <MatButton OnClick="@(e => { infoDialogIsOpen = false; })">Alright!</MatButton>
+  </MatDialogActions>
+</MatDialog>
+
+@code
+{
+  public int tabIndex = 0;
+
+  void ChangeTab(MouseEventArgs e)
+  {
+    tabIndex = tabIndex < 3 ? tabIndex + 1 : 0;
+  }
+
+  bool checked1 = true;
+  bool checked2 = false;
+  bool? checked3 = null;
+
+  MatChip selectedChip = null;
+  @*MatChip[] selectedChips = null;*@
+
+  MatChipSet chipset = null;
+  int counter = 1;
+  List<string> labels = new List<string>();
+
+  private void OnAddOption()
+  {
+    labels.Add($"Chip {counter++}");
+  }
+
+  private void OnTrailingIconClick(MatChip chip)
+  {
+    labels.Remove(chip.Label);
+    chipset?.UnregisterChip(chip); // <-- to avoid memleak
+  }
+
+  ForwardRef buttonForwardRef = new ForwardRef();
+  BaseMatMenu Menu;
+
+  public void OnClick(MouseEventArgs e)
+  {
+    this.Menu.OpenAsync();
+  }
+
+  public class XpUser
+  {
+    public string Avatar { get; set; }
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public int Rank { get; set; }
+    public string Xp { get; set; }
+
+    public XpUser(string avatar, string id, string name, int rank, string xp)
+    {
+      Avatar = avatar;
+      Id = id;
+      Name = name;
+      Rank = rank;
+      Xp = xp;
+    }
+  }
+
+  XpUser[] xpusers = new[]
+  {
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 1, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 2, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 3, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 4, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 5, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 6, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 7, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 8, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 9, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 10, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 11, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 12, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 13, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 14, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 15, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 16, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 17, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 18, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 19, "000/000 xp"),
+    new XpUser("https://cdn.discordapp.com/avatars/646691839440584739/b9e9b4e6f77c05229c1c05ed49d4feef.png?size=32", "646691839440584739", "TwoBits#9323", 20, "000/000 xp"),
+  };
+
+  bool infoDialogIsOpen = false;
+
+  void OpenInfoDialog()
+  {
+    infoDialogIsOpen = true;
+  }
+
+  public class xpFormulas
+  {
+    public string FormName { get; set; }
+    public string FormUse { get; set; }
+
+    public xpFormulas(string formname, string formuse)
+    {
+      FormName = formname;
+      FormUse = formuse;
+    }
+  }
+
+  xpFormulas[] xpformulas = new[]
+  {
+    new xpFormulas("y = 5x² + 50x + 100", "Used from level 0 until level 39"),
+    new xpFormulas("y = 10000", "Used from level 40 and above"),
+  };
+}

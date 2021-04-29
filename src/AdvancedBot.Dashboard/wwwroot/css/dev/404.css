@@ -1,0 +1,26 @@
+.app-main-content {
+  height: calc(100vh - 64px);
+  margin-block-start: 64px;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.mat-layout-grid-cell,
+.mdc-drawer {
+  z-index: 1;
+}
+
+.mat-layout-grid {
+  height: calc(100vh - 64px);
+}
+
+.call-to-action-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.call-to-action-list .mdc-button {
+  margin-block-end: 1rem;
+  margin-inline: auto;
+}

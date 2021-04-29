@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/AdvancedBot.Console/bin/Debug/netcoreapp3.1/AdvancedBot.Console.dll",
+            "program": "${workspaceFolder}/src/AdvancedBot.Dashboard/bin/Debug/netcoreapp3.1/AdvancedBot.Dashboard.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/AdvancedBot.Console",
+            "cwd": "${workspaceFolder}/src/AdvancedBot.Dashboard",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

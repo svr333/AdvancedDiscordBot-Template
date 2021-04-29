@@ -3,7 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AdvancedBot.Dashboard.Data;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
+using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace AdvancedBot.Dashboard
 {
@@ -16,13 +23,44 @@ namespace AdvancedBot.Dashboard
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddHeadElementHelper();
+            services.AddSingleton<HttpClient>();
+            services.AddResponseCompression();
+            services.AddResponseCompression(options =>
+            {
+                IEnumerable<string> MimeTypes = new[] { "text/plain", "text/html", "text/css", "font/woff2", "font/woff", "font/ttf", "application/javascript", "image/x-icon", "image/png" };
+
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+
+                options.Providers.Add<CustomCompressionProvider>();
+                options.MimeTypes = MimeTypes;
+                options.EnableForHttps = true;
+
+                services.Configure<BrotliCompressionProviderOptions>(options =>
+                {
+                    options.Level = CompressionLevel.Optimal;
+                });
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddDiscord(x =>
+            {
+                x.AppId = Configuration["Discord:ClientId"];
+                x.AppSecret = Configuration["Discord:ClientSecret"];
+                x.SaveTokens = true;
+                x.Scope.Add("guilds");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,16 +77,25 @@ namespace AdvancedBot.Dashboard
                 app.UseHsts();
             }
 
+            app.UseResponseCompression();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapDefaultControllerRoute();
             });
         }
+    }
+    public class CustomCompressionProvider : ICompressionProvider
+    {
+        public string EncodingName => "br";
+        public bool SupportsFlush => true;
+        public Stream CreateStream(Stream outputStream) => new BrotliStream(outputStream, CompressionMode.Compress);
     }
 }

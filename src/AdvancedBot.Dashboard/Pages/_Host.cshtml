@@ -1,36 +1,66 @@
 ﻿@page "/"
 @namespace AdvancedBot.Dashboard.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" @*data-is-light="@bbLightTheme"*@>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AdvancedBot.Dashboard</title>
-    <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+  <meta charset="utf-8">
+  <title>GLR Discord Bot</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json?v=1">
+  <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#ff9800">
+  <meta name="apple-mobile-web-app-title" content="GLRDiscord Bot">
+  <meta name="application-name" content="GLRDiscord Bot">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#121212">
+  @*<link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />*@
+  <meta name="color-scheme" content="dark light">
+  <link href="css/prod/matBlazor.min.css" rel="stylesheet">
+  <link href="css/prod/app.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&family=Material+Icons&display=swap" rel="stylesheet" crossorigin="anonymous">
+  @*<script src="_content/MatBlazor/dist/matBlazor.js"></script>*@
+  <script src="js\matBlazor-min.js" async></script>
+  <meta name="title" content="Galaxy Life Discord Bot Dashboard">
+  <meta name="description" content="This site allows to manipulate the GLR Discord Bot to do tasks such as warn, kick and / or ban users, auto-moderate the server and more.">
+  <meta name="keywords" content="Galaxy Life, Galaxy Life Reborn, Discord Bot, Galaxy Life Reborn Bot, Galaxy Life Reborn Discord Bot">
+  <meta name="author" content="svr333, TwoBits">
+  <meta name="designer" content="Tobias Alcaraz (TwoBits), tobiasnalcaraz@gmail.com">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Dashboard panel for Galaxy Life Reborn Discord moderators.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
-<body>
+<body class="mdc-typography">
     <app>
-        <component type="typeof(App)" render-mode="ServerPrerendered" />
+        @(await Html.RenderComponentAsync<App>(RenderMode.Server))
     </app>
 
     <div id="blazor-error-ui">
-        <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
-        </environment>
-        <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
-        </environment>
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+        <div class="mdc-snackbar mdc-snackbar--leading">
+            <div class="mdc-snackbar__surface" role="status" aria-relevant="additions">
+                <div class="mdc-snackbar__label" aria-atomic="false">
+                    An unhandled exception has occurred. See browser dev tools for details.
+                </div>
+                <div class="mdc-snackbar__actions" aria-atomic="true">
+                    <button type="button" class="mdc-button mdc-snackbar__action">
+                        <div class="mdc-button__ripple"></div>
+                        <a class="mdc-button__label" onclick="window.location.reload();">Reload</a>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <script src="_framework/blazor.server.js"></script>
+    <script src="js/blazor.server-min.js" type="text/javascript"></script>
 </body>
 </html>
