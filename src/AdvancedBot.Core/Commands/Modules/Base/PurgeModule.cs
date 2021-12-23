@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdvancedBot.Core.Commands.Preconditions;
+using AdvancedBot.Core.Commands.Attributes;
 using Discord;
 using Discord.Commands;
 

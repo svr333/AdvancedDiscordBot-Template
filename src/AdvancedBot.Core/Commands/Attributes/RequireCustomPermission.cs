@@ -4,7 +4,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace AdvancedBot.Core.Commands.Preconditions
+namespace AdvancedBot.Core.Commands.Attributes
 {
     public class RequireCustomPermission : PreconditionAttribute
     {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using AdvancedBot.Core.Commands.Preconditions;
+using AdvancedBot.Core.Commands.Attributes;
 
 namespace AdvancedBot.Core.Commands.Modules.Base
 {

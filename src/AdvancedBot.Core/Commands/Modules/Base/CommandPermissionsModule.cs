@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using AdvancedBot.Core.Commands.Preconditions;
+using AdvancedBot.Core.Commands.Attributes;
 using AdvancedBot.Core.Services.Commands;
 using Discord;
 using Discord.Commands;

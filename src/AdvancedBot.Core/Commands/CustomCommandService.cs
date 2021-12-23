@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AdvancedBot.Core.Commands.Attributes;
 using AdvancedBot.Core.Services;
 using Discord;
 using Discord.Commands;
@@ -189,6 +190,84 @@ namespace AdvancedBot.Core.Commands
             }
             
             return $"{prefix}{command.Aliases[0]} {parameters}";
+        }
+
+        public SlashCommandProperties[] GetDesiredSlashCommands()
+        {
+            var attributedCommands = GetSlashAttributeCommands();
+            var slashCommands = new List<SlashCommandProperties>();
+
+            for (int i = 0; i < attributedCommands.Length; i++)
+            {
+                var scb = new SlashCommandBuilder();
+
+                scb.WithName(attributedCommands[i].Name);
+                scb.WithDescription(attributedCommands[i].Summary);
+
+                for (int j = 0; j < attributedCommands[i].Parameters.Count; j++)
+                {
+                    var param = attributedCommands[i].Parameters[j];
+                    scb.AddOption(param.Name, ParameterToCommandOptionType(param), param.Summary, param.IsOptional);
+                }
+
+                slashCommands.Add(scb.Build());
+            }
+
+            return slashCommands.ToArray();
+        }
+
+        private CommandInfo[] GetSlashAttributeCommands()
+        {
+            var slashCommands = new List<CommandInfo>();
+
+            for (int i = 0; i < Modules.Count(); i++)
+            {
+                var module = Modules.ElementAt(i);
+
+                for (int j = 0; j < module.Commands.Count; j++)
+                {
+                    var command = module.Commands[j];
+
+                    if (command.Attributes.FirstOrDefault(x => (SlashCommandAttribute)x != null) != null)
+                    {
+                        slashCommands.Add(command);
+                    }
+                }
+            }
+
+            return slashCommands.ToArray();
+        }
+
+        private ApplicationCommandOptionType ParameterToCommandOptionType(ParameterInfo param)
+        {
+            if (param.Type == typeof(double))
+            {
+                return ApplicationCommandOptionType.Number;
+            }
+            else if (param.Type == typeof(int))
+            {
+                return ApplicationCommandOptionType.Integer;
+            }
+            else if (param.Type == typeof(bool))
+            {
+                return ApplicationCommandOptionType.Boolean;
+            }
+            else if (param.Type == typeof(IChannel))
+            {
+                return ApplicationCommandOptionType.Channel;
+            }
+            else if (param.Type == typeof(IUser))
+            {
+                return ApplicationCommandOptionType.User;
+            }
+            else if (param.Type == typeof(IRole))
+            {
+                return ApplicationCommandOptionType.Role;
+            }
+            else
+            {
+                return ApplicationCommandOptionType.String;
+            }
         }
     }
 }

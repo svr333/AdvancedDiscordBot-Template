@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AdvancedBot.Core.Commands;
 using AdvancedBot.Core.Commands.TypeReaders;
+using System.Linq;
 
 namespace AdvancedBot.Core.Services.Commands
 {
@@ -31,8 +32,28 @@ namespace AdvancedBot.Core.Services.Commands
             _commands.AddTypeReader<IUser>(new IUserTypeReader(), true);
             await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), _services);
 
+            await InitializeSlashCommands();
+
             _client.MessageReceived += OnMessageReceived;
             _commands.CommandExecuted += OnCommandExecuted;
+        }
+
+        private async Task InitializeSlashCommands()
+        {
+            var desiredCommands = _commands.GetDesiredSlashCommands();
+            var existingCommands = (await _client.GetGlobalApplicationCommandsAsync()).ToArray();
+
+            for (int i = 0; i < desiredCommands.Length; i++)
+            {
+                // only create if nothing similar was found
+                if (existingCommands.FirstOrDefault(
+                    x => x.Name == desiredCommands[i].Name.GetValueOrDefault()
+                    && x.Description == desiredCommands[i].Description.GetValueOrDefault()
+                    && x.Options.Count == desiredCommands[i].Options.GetValueOrDefault().Count) == null)
+                {
+                    await _client.CreateGlobalApplicationCommandAsync(desiredCommands[i]);
+                }
+            }
         }
 
         private async Task OnMessageReceived(SocketMessage msg)
