@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace AdvancedBot.Core.Commands
 {
-    public class TopModule : ModuleBase<SocketCommandContext>
+    public class TopModule : ModuleBase<CommandContext>
     {
         public GuildAccountService Accounts { get; set; }
         public CustomCommandService Commands { get; set; }

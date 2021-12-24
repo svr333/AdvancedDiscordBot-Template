@@ -64,7 +64,10 @@ namespace AdvancedBot.Core.Services.Commands
         private async Task OnSlashCommandExecuted(SocketSlashCommand cmd)
         {
             await cmd.DeferAsync();
-            var a = cmd.Data.Name;
+            var msg = await cmd.GetOriginalResponseAsync();
+
+            var context = new CommandContext(_client, msg);
+            await _commands.ExecuteAsync(context, 0, _services);
         }
 
         private async Task OnMessageReceived(SocketMessage msg)
