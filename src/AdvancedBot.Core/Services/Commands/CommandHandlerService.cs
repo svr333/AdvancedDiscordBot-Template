@@ -34,6 +34,7 @@ namespace AdvancedBot.Core.Services.Commands
 
             await InitializeSlashCommands();
 
+            _client.SlashCommandExecuted += OnSlashCommandExecuted;
             _client.MessageReceived += OnMessageReceived;
             _commands.CommandExecuted += OnCommandExecuted;
         }
@@ -41,19 +42,29 @@ namespace AdvancedBot.Core.Services.Commands
         private async Task InitializeSlashCommands()
         {
             var desiredCommands = _commands.GetDesiredSlashCommands();
-            var existingCommands = (await _client.GetGlobalApplicationCommandsAsync()).ToArray();
+            //var existingCommands = (await _client.GetGlobalApplicationCommandsAsync()).ToArray();
 
-            for (int i = 0; i < desiredCommands.Length; i++)
-            {
-                // only create if nothing similar was found
-                if (existingCommands.FirstOrDefault(
-                    x => x.Name == desiredCommands[i].Name.GetValueOrDefault()
-                    && x.Description == desiredCommands[i].Description.GetValueOrDefault()
-                    && x.Options.Count == desiredCommands[i].Options.GetValueOrDefault().Count) == null)
-                {
-                    await _client.CreateGlobalApplicationCommandAsync(desiredCommands[i]);
-                }
-            }
+            var b = await _client.GetApplicationInfoAsync();
+
+            await _client.BulkOverwriteGlobalApplicationCommandsAsync(desiredCommands);
+
+            // for (int i = 0; i < desiredCommands.Length; i++)
+            // {
+            //     // only create if nothing similar was found
+            //     if (existingCommands.FirstOrDefault(
+            //         x => x.Name == desiredCommands[i].Name.GetValueOrDefault()
+            //         && x.Description == desiredCommands[i].Description.GetValueOrDefault()
+            //         && x.Options.Count == desiredCommands[i].Options.GetValueOrDefault().Count) == null)
+            //     {
+            //         await _client.CreateGlobalApplicationCommandAsync(desiredCommands[i]);
+            //     }
+            // }
+        }
+
+        private async Task OnSlashCommandExecuted(SocketSlashCommand cmd)
+        {
+            await cmd.DeferAsync();
+            var a = cmd.Data.Name;
         }
 
         private async Task OnMessageReceived(SocketMessage msg)

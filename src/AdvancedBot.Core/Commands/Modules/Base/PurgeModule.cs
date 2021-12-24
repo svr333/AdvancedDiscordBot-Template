@@ -15,14 +15,20 @@ namespace AdvancedBot.Core.Commands.Modules.Base
     public class PurgeModule : TopModule
     {
         [Command("")]
+        [SlashCommand]
         [Summary("Purges the last x messages.")]
-        public async Task DefaultPurgeAsync(int search = 100)
+        public async Task DefaultPurgeAsync([Summary("The amount of messages to check")] int search = 100)
             => await ReplyAsync($"", false, await HandlePurgeCommandAsync(search));
 
         [Command("user")]
+        [SlashCommand]
         [Summary("Purges the last x messages by said user.")]
-        public async Task PurgeUserAsync(IUser user, int search = 100)
-            => await ReplyAsync($"", false, await HandlePurgeCommandAsync(search, user));
+        public async Task PurgeUserAsync(
+            [Summary("The user you want to purge")] IUser user,
+            [Summary("The amount of messages to check")] int search = 100)
+        {
+            await ReplyAsync($"", false, await HandlePurgeCommandAsync(search, user));
+        }
 
         private async Task<Embed> HandlePurgeCommandAsync(int amount, IUser user = null)
         {

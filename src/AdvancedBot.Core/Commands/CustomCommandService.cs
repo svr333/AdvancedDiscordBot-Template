@@ -199,10 +199,47 @@ namespace AdvancedBot.Core.Commands
 
             for (int i = 0; i < attributedCommands.Length; i++)
             {
+                /* Retrieve module stack (creating sub commands)
+                 * you cannot create a slashcommand with a space in the name */
+                var module = attributedCommands[i].Module;
+                var modules = new List<ModuleInfo>() { module };
                 var scb = new SlashCommandBuilder();
 
-                scb.WithName(attributedCommands[i].Name);
-                scb.WithDescription(attributedCommands[i].Summary);
+                // case where module is not categorized and commands are individual
+                if (!module.IsSubmodule && string.IsNullOrEmpty(module.Name))
+                {
+                    scb.WithName(attributedCommands[i].Name);
+                    scb.WithDescription(attributedCommands[i].Summary);
+                }
+                // make sure to have every module
+                else
+                {
+                    while (module.IsSubmodule)
+                    {
+                        modules.Add(module);
+                        module = module.Parent;
+                    };
+
+                    modules.Reverse();
+
+                    scb.WithName(modules[0].Name);
+
+                    for (int j = 1; j < modules.Count; j++)
+                    {
+                        scb.AddOption(modules[j].Name, ApplicationCommandOptionType.SubCommandGroup, modules[j].Summary);
+                    }
+
+                    if (string.IsNullOrEmpty(attributedCommands[i].Name))
+                    {
+                        scb.Options?.Remove(scb.Options?.Last());
+                        var lastModule = modules.Last();
+                        scb.AddOption(lastModule.Name, ApplicationCommandOptionType.SubCommand, lastModule.Summary);
+                    }
+                    else
+                    {
+                        scb.AddOption(attributedCommands[i].Name, ApplicationCommandOptionType.SubCommand, attributedCommands[i].Summary);
+                    }
+                }
 
                 for (int j = 0; j < attributedCommands[i].Parameters.Count; j++)
                 {
@@ -228,7 +265,7 @@ namespace AdvancedBot.Core.Commands
                 {
                     var command = module.Commands[j];
 
-                    if (command.Attributes.FirstOrDefault(x => (SlashCommandAttribute)x != null) != null)
+                    if (command.Attributes.FirstOrDefault(x => x as SlashCommandAttribute != null) != null)
                     {
                         slashCommands.Add(command);
                     }

@@ -1,8 +1,6 @@
-using Discord.Commands;
+using System;
 
 namespace AdvancedBot.Core.Commands.Attributes
 {
-    public class SlashCommandAttribute : CommandAttribute
-    {
-    }
+    public class SlashCommandAttribute : Attribute { }
 }
