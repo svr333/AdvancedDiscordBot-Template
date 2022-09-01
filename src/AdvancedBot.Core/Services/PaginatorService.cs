@@ -29,7 +29,7 @@ namespace AdvancedBot.Core.Services
         }
         public async Task<IUserMessage> HandleNewPaginatedMessageAsync(CommandContext context, IEnumerable<EmbedField> displayFields, IEnumerable<string> displayTexts, Embed embed)
         {
-            var message = await context.Channel.SendMessageAsync("", false, embed, component: CreateMessageComponents());
+            var message = await context.Channel.SendMessageAsync("", false, embed, components: CreateMessageComponents());
             var paginatedMessage = new PaginatedMessage()
             {
                 DiscordMessageId = message.Id,

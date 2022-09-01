@@ -56,7 +56,11 @@ namespace AdvancedBot.Core
             => Console.WriteLine($"{msg.Source}: {msg.Message}");
 
         private async Task OnReadyAsync()
-            => await _client.SetGameAsync("Being a bot.");
+        {
+            // has to be on ready to avoid auth exception
+            await _services.GetRequiredService<CommandHandlerService>().InitializeSlashCommands();
+            await _client.SetGameAsync("Being a bot.");
+        }
 
         private ServiceProvider ConfigureServices()
         {

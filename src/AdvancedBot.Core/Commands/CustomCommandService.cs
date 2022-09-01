@@ -201,56 +201,113 @@ namespace AdvancedBot.Core.Commands
             {
                 /* Retrieve module stack (creating sub commands)
                  * you cannot create a slashcommand with a space in the name */
-                var module = attributedCommands[i].Module;
+                var cmd = attributedCommands[i];
+                var module = cmd.Module;
+
                 var modules = new List<ModuleInfo>() { module };
                 var scb = new SlashCommandBuilder();
+                
 
                 // case where module is not categorized and commands are individual
                 if (!module.IsSubmodule && string.IsNullOrEmpty(module.Name))
                 {
-                    scb.WithName(attributedCommands[i].Name);
-                    scb.WithDescription(attributedCommands[i].Summary);
+                    scb.WithName(cmd.Name);
+                    scb.WithDescription(cmd.Summary);
                 }
                 // make sure to have every module
                 else
                 {
                     while (module.IsSubmodule)
                     {
-                        modules.Add(module);
                         module = module.Parent;
+                        modules.Add(module);
                     };
 
                     modules.Reverse();
 
+                    // first module becomes base command name
                     scb.WithName(modules[0].Name);
+                    scb.WithDescription(modules[0].Summary);
 
-                    for (int j = 1; j < modules.Count; j++)
+                    // all in between modules need to be registered as subcommands
+                    for (int j = 1; j < modules.Count - 1; j++)
                     {
                         scb.AddOption(modules[j].Name, ApplicationCommandOptionType.SubCommandGroup, modules[j].Summary);
                     }
 
-                    if (string.IsNullOrEmpty(attributedCommands[i].Name))
+                    // if command name is empty, the name of module becomes the command
+                    if (string.IsNullOrEmpty(cmd.Name))
                     {
-                        scb.Options?.Remove(scb.Options?.Last());
-                        var lastModule = modules.Last();
-                        scb.AddOption(lastModule.Name, ApplicationCommandOptionType.SubCommand, lastModule.Summary);
+                        scb.Options?.Remove(scb.Options?.First());
                     }
-                    else
+                    else // add the command normally
                     {
-                        scb.AddOption(attributedCommands[i].Name, ApplicationCommandOptionType.SubCommand, attributedCommands[i].Summary);
+                        scb.AddOption(cmd.Name, ApplicationCommandOptionType.SubCommand, cmd.Summary);
                     }
                 }
 
-                for (int j = 0; j < attributedCommands[i].Parameters.Count; j++)
+                // add all parameters as options
+                for (int j = 0; j < cmd.Parameters.Count; j++)
                 {
-                    var param = attributedCommands[i].Parameters[j];
+                    var param = cmd.Parameters[j];
                     scb.AddOption(param.Name, ParameterToCommandOptionType(param), param.Summary, param.IsOptional);
                 }
 
                 slashCommands.Add(scb.Build());
             }
 
-            return slashCommands.ToArray();
+            return FilterSlashCommands(slashCommands.ToArray());
+        }
+
+        private SlashCommandProperties[] FilterSlashCommands(SlashCommandProperties[] commands)
+        {
+            var filteredCommands = new List<SlashCommandProperties>();
+
+            for (int i = 0; i < commands.Length; i++)
+            {
+                var cmdName = commands[i].Name.Value;
+
+                // check if we already handled this command
+                if (filteredCommands.FirstOrDefault(x => x.Name.Value == cmdName) != null)
+                {
+                    continue;
+                }
+
+                var sharedCommands = commands.Where(x => x.Name.Value == cmdName).ToArray();
+
+                // only one instance of this submodule found, add normally
+                if (sharedCommands.Length <= 1)
+                {
+                    filteredCommands.Add(commands[i]);
+                    continue;
+                }
+
+                var scb = new SlashCommandBuilder();
+
+                scb.WithName(sharedCommands[0].Name.Value);
+                scb.WithDescription(sharedCommands[0].Description.Value);
+                scb.AddOption(AddSubmodules(ref scb, sharedCommands));
+
+                filteredCommands.Add(scb.Build());
+            }
+
+            return filteredCommands.ToArray();
+        }
+
+        private SlashCommandOptionBuilder AddSubmodules(ref SlashCommandBuilder scb, SlashCommandProperties[] cmds)
+        {
+            for (int i = 0; i < cmds.Length; i++)
+            {
+                var sharedCommands = cmds.Where(x => x.Name.Value == cmds[i].Name.Value).ToArray();
+
+                if (sharedCommands.Length > 1)
+                {
+                    scb.AddOption(cmds[i].Name.Value, ApplicationCommandOptionType.SubCommandGroup, cmds[i].Name.Value);
+                    var subOption = AddSubmodules(ref scb, sharedCommands);
+                }
+
+                scb.AddOption(cmds[i].Name.Value, ApplicationCommandOptionType.SubCommand, cmds[i].Name.Value);
+            }
         }
 
         private CommandInfo[] GetSlashAttributeCommands()

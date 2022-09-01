@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using AdvancedBot.Core.Commands;
 using AdvancedBot.Core.Commands.TypeReaders;
 using System.Linq;
+using Discord.Net;
+using Newtonsoft.Json;
 
 namespace AdvancedBot.Core.Services.Commands
 {
@@ -32,33 +34,23 @@ namespace AdvancedBot.Core.Services.Commands
             _commands.AddTypeReader<IUser>(new IUserTypeReader(), true);
             await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), _services);
 
-            await InitializeSlashCommands();
-
             _client.SlashCommandExecuted += OnSlashCommandExecuted;
             _client.MessageReceived += OnMessageReceived;
             _commands.CommandExecuted += OnCommandExecuted;
         }
 
-        private async Task InitializeSlashCommands()
+        public async Task InitializeSlashCommands()
         {
-            var desiredCommands = _commands.GetDesiredSlashCommands();
-            //var existingCommands = (await _client.GetGlobalApplicationCommandsAsync()).ToArray();
-
-            var b = await _client.GetApplicationInfoAsync();
-
-            await _client.BulkOverwriteGlobalApplicationCommandsAsync(desiredCommands);
-
-            // for (int i = 0; i < desiredCommands.Length; i++)
-            // {
-            //     // only create if nothing similar was found
-            //     if (existingCommands.FirstOrDefault(
-            //         x => x.Name == desiredCommands[i].Name.GetValueOrDefault()
-            //         && x.Description == desiredCommands[i].Description.GetValueOrDefault()
-            //         && x.Options.Count == desiredCommands[i].Options.GetValueOrDefault().Count) == null)
-            //     {
-            //         await _client.CreateGlobalApplicationCommandAsync(desiredCommands[i]);
-            //     }
-            // }
+            try
+            {
+                var desiredCommands = _commands.GetDesiredSlashCommands();
+                await _client.BulkOverwriteGlobalApplicationCommandsAsync(desiredCommands);
+            }
+            catch (HttpException e)
+            {
+                var json = JsonConvert.SerializeObject(e.Errors, Formatting.Indented);
+                Console.WriteLine(json);
+            }
         }
 
         private async Task OnSlashCommandExecuted(SocketSlashCommand cmd)
