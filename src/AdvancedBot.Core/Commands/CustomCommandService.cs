@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AdvancedBot.Core.Services;
 using Discord;
 using Discord.Commands;
-using Humanizer;
 
 namespace AdvancedBot.Core.Commands
 {
@@ -43,32 +38,6 @@ namespace AdvancedBot.Core.Commands
             }.Build();
 
             await context.Interaction.ModifyOriginalResponseAsync(x => x.Embed = embed);
-        }
-
-        public string FormatCommandName(CommandInfo command)
-            => $"{command.Module.Name}_{command.Name}".ToLower();
-
-        public CommandInfo GetCommandInfo(string commandName)
-        {
-            var searchResult = Search(commandName);
-            if (!searchResult.IsSuccess) throw new Exception(searchResult.ErrorReason);
-
-            return searchResult.Commands.OrderBy(x => x.Command.Priority).FirstOrDefault().Command;
-        }
-
-        public string GenerateCommandUsage(CommandInfo command, string prefix)
-        {
-            StringBuilder parameters = new StringBuilder();
-
-            for (int i = 0; i < command.Parameters.Count; i++)
-            {
-                var pref = command.Parameters[i].IsOptional ? "[" : "<";
-                var suff = command.Parameters[i].IsOptional ? "]" : ">";
-                
-                parameters.Append($"{pref}{command.Parameters[i].Name.Underscore().Dasherize()}{suff} ");
-            }
-            
-            return $"{prefix}{command.Aliases[0]} {parameters}";
         }
     }
 }

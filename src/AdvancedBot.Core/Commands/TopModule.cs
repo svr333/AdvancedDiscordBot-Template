@@ -24,7 +24,6 @@ namespace AdvancedBot.Core.Commands
             return Task.CompletedTask;
         }
 
-    
         public async Task SendPaginatedMessageAsync(IEnumerable<EmbedField> displayFields, IEnumerable<string> displayTexts, EmbedBuilder templateEmbed)
         {
             var displayItems = 0;
